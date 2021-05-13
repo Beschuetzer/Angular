@@ -1,3 +1,5 @@
+//NOTE: THIS is the first js file that runs and is used to bootstrap the app.module.ts and hence the app.component.ts component
+
 import { enableProdMode } from '@angular/core';
 import { platformBrowserDynamic } from '@angular/platform-browser-dynamic';
 
