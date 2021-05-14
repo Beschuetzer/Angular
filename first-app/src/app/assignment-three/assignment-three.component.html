@@ -1,1 +1,19 @@
-<p>assignment-three works!</p>
+<div class='container text-center'>
+  <h3 class="jumbotron">{{assignmentName}}</h3>
+  <div class="row">
+    <div class="col-xs-12">
+      <button class="btn btn-secondary" (click)="onButtonClick($event)">Display Details</button>
+      <p *ngIf="shouldDisplayParagraph">This will toggle on each click</p>
+      <div class="jumbotron">
+        <p 
+          *ngFor="let timeStamp of timeStamps; let i = index" 
+          [ngClass]="{'color-white': getIsFifthPlusItem(timeStamp)}"
+          [ngStyle]="{backgroundColor: getIsFifthPlusItem(timeStamp) ? 'blue' : 'transparent'}"
+        >
+          {{ i + 1 }}: {{timeStamp}}
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
