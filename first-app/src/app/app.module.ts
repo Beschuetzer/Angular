@@ -9,6 +9,7 @@ import { ServersComponent } from './servers/servers.component';
 import { WarningAlertComponent } from './alerts/warning-alert/warning-alert.component';
 import { SuccessAlertComponent } from './alerts/success-alert/success-alert.component';
 import { AssignmentTwoComponent } from './assignment-two/assignment-two.component';
+import { AssignmentThreeComponent } from './assignment-three/assignment-three.component';
 
 @NgModule({
   //NOTE: anytime you add a new component, you need to tell angular about it by putting it in the declarations array
@@ -19,6 +20,7 @@ import { AssignmentTwoComponent } from './assignment-two/assignment-two.componen
     WarningAlertComponent,
     SuccessAlertComponent,
     AssignmentTwoComponent,
+    AssignmentThreeComponent,
   ],
   imports: [
     BrowserModule,

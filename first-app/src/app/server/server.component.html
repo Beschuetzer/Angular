@@ -1,3 +1,6 @@
-<p [ngStyle]="{backgroundColor: getColor()}">Server with ID {{ serverId }} is {{ getServerStatus() }}</p>
+<p 
+  [ngStyle]="{backgroundColor: getColor()}"
+  [ngClass]="{online: getDisplayOnline()}"
+>Server: {{ serverName }}, Id: {{ serverId }}, Status: {{ getServerStatus() }}</p>
 <!-- //NOTE: Inside of {{  }} you can write single line expressions (no block {} expressions) that evaluate to a string, including calls to methods/functions -->
 <!-- <p>{{ 'Server' }} with ID {{ serverId }} is {{ serverStatus }}</p> -->

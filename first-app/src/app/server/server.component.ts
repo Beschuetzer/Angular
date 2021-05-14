@@ -9,10 +9,19 @@ enum serverStatusColors {online = 'green', offline = 'red'}
   //selector is the tag by which you can use the component in templates (.html files); should be unique starting with 'app-'
   selector: 'app-server',
   templateUrl: './server.component.html',
+  // styleUrls: [
+  //   './server.component.css',
+  // ],
+  styles: [`
+    .online {
+      color: white;
+    }
+  `]
 })
 export class ServerComponent {
   serverId = -1;
   serverStatus = '';
+  serverName =  '';
 
   constructor() {
     const random = Math.random();
@@ -28,5 +37,10 @@ export class ServerComponent {
   getColor() {
     if (this.serverStatus === serverStatuses.offline) return serverStatusColors.offline
     else return serverStatusColors.online;
+  }
+
+  getDisplayOnline() {
+    console.log('call------------------------------------------------');
+    return this.serverStatus === serverStatuses.online;
   }
 }

@@ -24,5 +24,6 @@
 <!-- Note: don't use string interpolation inside a property binding like below -->
 <!-- <p [innerText]="{{allowNewServer}}"> -->
 <!-- </p> -->
-<app-server></app-server>
-<app-server></app-server>
+
+<!-- Note: using ngFor (a for loop) to render the servers found in the property 'servers'-->
+<app-server *ngFor="let server of servers"></app-server>
