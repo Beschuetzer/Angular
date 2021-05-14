@@ -1,0 +1,28 @@
+<label for="">Server Name</label>
+<input class='form-control' type="text" name="" id="" [(ngModel)]="serverName">
+<p [innerText]="serverName"></p>
+<!-- Note: '[someAttribute]' tells angular that  we are binding to this property via property binding;  whatever is in "" is interpolated via TS -->
+
+<!-- NOTE: Event Binding uses (eventName)="someHandler", e.g. (click) or (mouseenter), basically any event that the element supports -->
+<button 
+  [disabled]="!allowNewServer"
+  class="btn btn-primary"
+  (click)="onCreateServer($event)"
+  >
+  <!-- $event tells angular to pass the standard event object -->
+  Add Server
+</button>
+
+<!-- Property binding -->
+<p [innerText]="allowNewServer"></p>
+<!-- String Interpolation -->
+<p> allowNewServer = {{allowNewServer}}</p>
+<p *ngIf="serverCreated; else noServer">{{ serverCreationStatus }}</p>
+<ng-template #noServer>
+  <p>Server not yet created</p>
+</ng-template>
+<!-- Note: don't use string interpolation inside a property binding like below -->
+<!-- <p [innerText]="{{allowNewServer}}"> -->
+<!-- </p> -->
+<app-server></app-server>
+<app-server></app-server>
