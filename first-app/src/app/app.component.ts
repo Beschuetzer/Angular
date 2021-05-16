@@ -8,10 +8,15 @@ import { Component } from '@angular/core';
   //NOTE: inline styles
   styles: [`
     h3 {
-      color: green;
+      color: black;
     }
   `]
 })
 export class AppComponent {
   title = 'first-app';
+
+
+  handleEmitNumber(number: number) {
+    console.log('number =', number);
+  }
 }

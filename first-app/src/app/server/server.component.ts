@@ -40,7 +40,6 @@ export class ServerComponent {
   }
 
   getDisplayOnline() {
-    console.log('call------------------------------------------------');
     return this.serverStatus === serverStatuses.online;
   }
 }

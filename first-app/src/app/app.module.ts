@@ -10,6 +10,9 @@ import { WarningAlertComponent } from './alerts/warning-alert/warning-alert.comp
 import { SuccessAlertComponent } from './alerts/success-alert/success-alert.component';
 import { AssignmentTwoComponent } from './assignment-two/assignment-two.component';
 import { AssignmentThreeComponent } from './assignment-three/assignment-three.component';
+import { GameComponent } from './assignment-four/game/game.component';
+import { OddComponent } from './assignment-four/odd/odd.component';
+import { EvenComponent } from './assignment-four/even/even.component';
 
 @NgModule({
   //NOTE: anytime you add a new component, you need to tell angular about it by putting it in the declarations array
@@ -21,6 +24,9 @@ import { AssignmentThreeComponent } from './assignment-three/assignment-three.co
     SuccessAlertComponent,
     AssignmentTwoComponent,
     AssignmentThreeComponent,
+    GameComponent,
+    OddComponent,
+    EvenComponent,
   ],
   imports: [
     BrowserModule,

@@ -18,4 +18,14 @@
       <app-assignment-three></app-assignment-three>
     </div>
   </div>
+
+  <div class="row text-center">
+    <div class="col-xs-12">
+      <h3 class="jumbotron">Assignment Four</h3>
+      <app-game (emitNumber)="handleEmitNumber($event)">
+        <app-even></app-even>
+        <app-odd></app-odd>
+      </app-game>
+    </div>
+  </div>
 </div>
