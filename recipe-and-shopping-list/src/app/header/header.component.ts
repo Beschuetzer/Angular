@@ -1,4 +1,5 @@
-import { Component } from "@angular/core";
+import { Component, Output, EventEmitter } from "@angular/core";
+import { LinkNames } from '../models/enums';
 
 @Component({
   selector: 'app-header',
@@ -9,4 +10,12 @@ import { Component } from "@angular/core";
 })
 export class HeaderComponent {
   collapsed = true
+  @Output() emitClickedLinkName = new EventEmitter<string>();
+
+  handleLinkClick(e: Event, linkName: string) {
+    e.preventDefault();
+    this.emitClickedLinkName.emit(linkName);
+  }
 }
+
+

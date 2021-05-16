@@ -6,5 +6,10 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'recipe-and-shopping-list';
+  public title: string = 'recipe-and-shopping-list';
+  public clickedLink: string = 'recipes';
+
+  handleLinkClick(linkName: string) {
+    this.clickedLink = linkName;
+  }
 }
