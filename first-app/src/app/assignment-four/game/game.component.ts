@@ -11,6 +11,7 @@ export class GameComponent {
   @Output() emitNumber = new EventEmitter<number>();
   public intervalRef: any;
   @Input() counter: number = 0;
+  
 
   constructor() { }
 

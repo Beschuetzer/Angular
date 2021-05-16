@@ -6,8 +6,7 @@ import { Component, OnInit, Input } from '@angular/core';
   styleUrls: ['./odd.component.css']
 })
 export class OddComponent implements OnInit {
-  message: string = 'Odd';
-  @Input() counter: number = -1;
+  @Input() number: number = -1;
 
   constructor() { }
 

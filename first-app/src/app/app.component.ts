@@ -1,3 +1,4 @@
+import { ThisReceiver } from '@angular/compiler';
 import { Component } from '@angular/core';
 
 @Component({
@@ -14,9 +15,14 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'first-app';
-
+  public oddNumbers: number[] = [];
+  public evenNumbers: number[] = [];
 
   handleEmitNumber(number: number) {
-    console.log('number =', number);
+    if (number % 2 === 0) this.evenNumbers.push(number)
+    else this.oddNumbers.push(number);
+    console.log('this.oddNumbers =', 
+    this.oddNumbers);
+    console.log('this.evenNumbers =', this.evenNumbers);
   }
 }
