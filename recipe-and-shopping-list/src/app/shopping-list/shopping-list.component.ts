@@ -16,4 +16,10 @@ export class ShoppingListComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  hanldeNewIngredient(ingredient: Ingredient) {
+    console.log('ingredient =', ingredient);
+    if (ingredient instanceof Ingredient) this.ingredients.push(ingredient);
+    else throw new Error('Invalid new ingredient in ShoppingListComponent hanldeNewIngredient');
+  }
+
 }
