@@ -15,7 +15,7 @@ export class BetterHighlightDirective implements OnInit {
   constructor(private elementRef: ElementRef, private renderer: Renderer2) {}
   //NOTE: These inputs binding hooks allow you to bind to the host element as if it had these properties on it
   @Input() defaultColor: string = 'transparent';
-  @Input() highlightColor: string = 'blue';
+  @Input('appBetterHighlight') highlightColor: string = 'blue';
 
    //NOTE: if all we want to do is change the background color in a directive, we can use the decorator @HostBinding
    //@HostBinding allows to you bind to any property of the host element (e.g. .classList, .className, .style, etc.)
