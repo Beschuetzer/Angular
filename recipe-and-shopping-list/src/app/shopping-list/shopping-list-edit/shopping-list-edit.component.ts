@@ -1,5 +1,6 @@
-import { Component, ElementRef, EventEmitter, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { Ingredient } from 'src/app/models/ingredient.model';
+import { ShoppingListService } from '../shopping-list.service';
 
 @Component({
   selector: 'app-shopping-list-edit',
@@ -9,27 +10,36 @@ import { Ingredient } from 'src/app/models/ingredient.model';
 export class ShoppingListEditComponent implements OnInit {
   @ViewChild('amountInput') amountInput: ElementRef;
   @ViewChild('nameInput') nameInput: ElementRef;
-  @Output() emitNewIngredient = new EventEmitter<Ingredient>();
-  constructor() { }
+  
+  constructor(private shoppingListService: ShoppingListService) { }
 
   ngOnInit(): void {
   }
 
   onClickAddClick(e: Event) {
-    const nameInputElement = this.nameInput.nativeElement;
-    const amountInputElement = this.amountInput.nativeElement;
-    if (nameInputElement.value !== '' && amountInputElement.value !== '') {
-      const newIngredient = new Ingredient(nameInputElement.value, amountInputElement.value);
-      this.emitNewIngredient.emit(newIngredient);
+    const { name, amount, shouldContinue } = this.getIsValidInputs();
+    if (shouldContinue) {
+      const newIngredient = new Ingredient(name, amount);
+      this.shoppingListService.addIngredient(newIngredient);
     }
   }
 
   onClickDeleteClick(e: Event) {
-    console.log('e =', e);
+    const { name } = this.getIsValidInputs();
+    this.shoppingListService.deleteIngredient(name);
   }
   
   onClickClearClick(e: Event) {
-    console.log('e =', e);
+    this.shoppingListService.clearIngredients();
   }
+  
+  getIsValidInputs() {
+    const nameInputElement = this.nameInput.nativeElement;
+    const amountInputElement = this.amountInput.nativeElement;
+    if (nameInputElement.value !== '' && amountInputElement.value !== '') return {name: nameInputElement.value, amount: amountInputElement.value, shouldContinue: true};
+    return {name: nameInputElement.value, amount: amountInputElement.value, shouldContinue: false};
+  }
+
+  get
 
 }

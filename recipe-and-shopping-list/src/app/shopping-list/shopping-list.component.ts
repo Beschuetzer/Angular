@@ -18,8 +18,4 @@ export class ShoppingListComponent implements OnInit {
       this.ingredients = ingredients;
     });
   }
-
-  hanldeNewIngredientClick(ingredient: Ingredient) {
-    this.shoppingListService.addIngredient(ingredient);
-  }
 }

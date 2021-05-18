@@ -18,6 +18,7 @@ export class ShoppingListService {
   }
 
   addIngredient(ingredient: Ingredient) {
+    debugger
     if (ingredient instanceof Ingredient) {
       const ingredientIndex = this.ingredients.findIndex(ingredient2 => ingredient2.name?.toLowerCase() === ingredient.name?.toLowerCase());
       
@@ -27,8 +28,26 @@ export class ShoppingListService {
       }
 
       this.ingredients.push(ingredient);
-      this.updateIngredients.emit(this.ingredients);
+      this.sendUpdatedIngredients();
     }
     else throw new Error('Invalid new ingredient in ShoppingListComponent hanldeNewIngredient');
+  }
+
+  clearIngredients() {
+    this.ingredients = [];
+    this.sendUpdatedIngredients();
+  }
+
+  deleteIngredient(name: string) {
+    const indexOfIngredient = this.ingredients.findIndex(ingredient => ingredient.name?.toLowerCase() === name?.toLowerCase());
+    if (indexOfIngredient !== -1) {
+      this.ingredients.splice(indexOfIngredient, 1);
+      this.sendUpdatedIngredients();
+    }
+    else alert(`${name} is not in the ingredient list.  You can add it though.`)
+  }
+
+  sendUpdatedIngredients() {
+    this.updateIngredients.emit(this.ingredients);
   }
 }
