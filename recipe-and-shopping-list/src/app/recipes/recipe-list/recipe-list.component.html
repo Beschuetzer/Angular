@@ -7,8 +7,9 @@
 <div class="row">
   <div class="col-xs-12">
     <app-recipe-item 
-      (emitClickedRecipeName)='handleRecipeClick(recipeEl)'
-      *ngFor="let recipeEl of recipes" [recipe]="recipeEl"
+      (click)='handleRecipeClick(recipeEl)'
+      [index]="i"
+      *ngFor="let recipeEl of recipes; let i = index" [recipe]="recipeEl"
     ></app-recipe-item>
   </div>
 </div>
