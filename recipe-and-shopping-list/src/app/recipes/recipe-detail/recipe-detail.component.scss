@@ -1,3 +1,9 @@
 img {
   max-width: 15rem;
 }
+
+.recipe{ 
+  &__detail-link {
+    cursor: pointer;
+  }
+}

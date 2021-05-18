@@ -18,10 +18,8 @@ export class ShoppingListService {
   }
 
   addIngredient(ingredient: Ingredient) {
-    debugger
     if (ingredient instanceof Ingredient) {
-      const ingredientIndex = this.ingredients.findIndex(ingredient2 => ingredient2.name?.toLowerCase() === ingredient.name?.toLowerCase());
-      
+      const ingredientIndex = this.getIngredientIndex(ingredient);
       if (ingredientIndex !== -1) {
         this.ingredients[ingredientIndex].amount = ingredient.amount;
         return alert(`${ingredient.name} is already in the list.  Updating the current value`);
@@ -30,7 +28,30 @@ export class ShoppingListService {
       this.ingredients.push(ingredient);
       this.sendUpdatedIngredients();
     }
-    else throw new Error('Invalid new ingredient in ShoppingListComponent hanldeNewIngredient');
+    else throw new Error('Invalid new ingredient in ShoppingListComponent in addIngredient');
+  }
+
+  addIngredients(ingredients: Ingredient[]) {
+    if (ingredients.length > 0) {
+      //add ingredients not present while adding tallies for ones present
+      for (let i = 0; i < ingredients.length; i++) {
+        const ingredient = ingredients[i];
+        if (ingredient instanceof Ingredient) {
+          const foundIndex = this.getIngredientIndex(ingredient);
+          if (foundIndex == -1) {
+            //New Ingredient
+            this.ingredients.push(ingredient);
+          }
+          else {
+            //Already Present
+            this.ingredients[foundIndex].amount += ingredient.amount;
+          }
+        }
+        else throw new Error('Invalid ingredient sent to ShoppingListComponent in addIngredients');;
+      }
+    }
+    else throw new Error('No ingredients sent to ShoppingListComponent in addIngredients');;
+    this.sendUpdatedIngredients();
   }
 
   clearIngredients() {
@@ -47,7 +68,11 @@ export class ShoppingListService {
     else alert(`${name} is not in the ingredient list.  You can add it though.`)
   }
 
+  getIngredientIndex(ingredient: Ingredient): number {
+    return this.ingredients.findIndex(ingredient2 => ingredient2.name?.toLowerCase() === ingredient.name?.toLowerCase());
+  }
+
   sendUpdatedIngredients() {
-    this.updateIngredients.emit(this.ingredients);
+    this.updateIngredients.emit(this.ingredients.slice());
   }
 }

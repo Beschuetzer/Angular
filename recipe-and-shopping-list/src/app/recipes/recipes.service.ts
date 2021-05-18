@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable } from '@angular/core';
+import { Ingredient } from '../models/ingredient.model';
 
 import { Recipe } from '../models/recipe.model';
 
@@ -8,8 +9,16 @@ import { Recipe } from '../models/recipe.model';
 export class RecipesService {
   private clickedRecipe: Recipe;
   private recipes: Recipe[] = [
-    new Recipe('Test', "This is a test recipe.  delete in final", 'https://live.staticflickr.com/121/304786709_5648e5ef61_b.jpg', []),
-    new Recipe('Test2', "This is another recipe.  delete in final", 'https://live.staticflickr.com/121/304786709_5648e5ef61_b.jpg', []),
+    new Recipe('Tasty Schnitzel',
+      "A super-tasty schnitzel - just awesome!",
+      'https://upload.wikimedia.org/wikipedia/commons/7/72/Schnitzel.JPG',
+      [new Ingredient('Meat', 1), new Ingredient('Frech Fries', 20)]
+    ),
+    new Recipe('Big Fat Burger',
+      "What else is there to say?",
+      'https://upload.wikimedia.org/wikipedia/commons/b/be/Burger_King_Angus_Bacon_%26_Cheese_Steak_Burger.jpg',
+      [new Ingredient('Buns', 2), new Ingredient('Meat', 3), new Ingredient('Ketchup', 5)]
+    ),
   ];
   updateClickedRecipe = new EventEmitter<Recipe>();
 
