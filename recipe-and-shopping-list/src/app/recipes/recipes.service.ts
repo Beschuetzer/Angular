@@ -1,4 +1,4 @@
-import { EventEmitter, Injectable } from '@angular/core';
+import { EventEmitter, Injectable, Output } from '@angular/core';
 import { Ingredient } from '../models/ingredient.model';
 
 import { Recipe } from '../models/recipe.model';
@@ -25,6 +25,7 @@ export class RecipesService {
     ),
   ];
   updateClickedRecipe = new EventEmitter<Recipe>();
+  updateRecipes = new EventEmitter<Recipe[]>();
 
   constructor() {}
 
@@ -49,5 +50,13 @@ export class RecipesService {
   setClickedRecipe(recipe: Recipe) {
     this.clickedRecipe = recipe;
     this.updateClickedRecipe.emit(this.clickedRecipe);
+  }
+
+  getUpdatedRecipes() {
+    this.updateRecipes.emit(this.recipes);
+  }
+
+  deleteRecipe(index: number) {
+    return this.recipes.splice(index, 1);
   }
 }

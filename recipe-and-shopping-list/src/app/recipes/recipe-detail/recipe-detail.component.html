@@ -15,15 +15,23 @@
         class="btn btn-primary dropdown-toggle" 
         type="button"
       >
-        Edit  Recipe 
+        Options 
         <span class="caret"></span>
       </button>
       <ul class="dropdown-menu">
         <li 
           (click)="handleIngredientsToShoppingList($event)"
         ><a class="cursor-pointer">To Shopping List</a></li>
-        <li><a class="cursor-pointer">Edit Recipe</a></li>
-        <li><a class="cursor-pointer">Delete Recipe</a></li>
+        <li
+          [routerLinkActive]="'active'"
+        ><a 
+          class="cursor-pointer"
+          [routerLink]="['edit']"
+        >Edit Recipe</a></li>
+        <li><a 
+          class="cursor-pointer"
+          (click)="handleDeleteClick()"
+        >Delete Recipe</a></li>
       </ul>
     </div>
   </div>

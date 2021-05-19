@@ -12,12 +12,6 @@ export class RecipesComponent implements OnInit {
 
   ngOnInit(): void {
     this.clickedRecipe = this.recipesService.getClickedRecipe();
-    this.recipesService.updateClickedRecipe.subscribe((clickedRecipe: Recipe) =>{
-      this.clickedRecipe = clickedRecipe;
-    });
   }
 
-  handleClickedRecipe (clickedRecipe: Recipe) {
-    this.recipesService.setClickedRecipe(clickedRecipe);
-  }
 }
