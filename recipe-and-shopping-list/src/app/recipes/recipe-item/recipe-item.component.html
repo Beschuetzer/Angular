@@ -1,4 +1,7 @@
 <a 
+  (click)="handleClick(recipe)"
+  [routerLink]="recipe.id"
+  [routerLinkActive]="'active'" 
   class="list-group-item clearfix cursor-pointer" 
 >
   <div class="pull-left">
