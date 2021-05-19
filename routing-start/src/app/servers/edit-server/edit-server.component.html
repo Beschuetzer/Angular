@@ -1,23 +1,31 @@
-<div class="form-group">
-  <label for="name">Server Name</label>
-  <input
-    type="text"
-    id="name"
-    class="form-control"
-    [(ngModel)]="serverName"
-    value="server.name"
-  >
+<div *ngIf="!allowEdit">
+  <h3>You are not allowed to edit this server</h3>
 </div>
-<div class="form-group">
-  <label for="status">Server Status</label>
-  <select
-    id="status"
-    class="form-control"
-    [(ngModel)]="serverStatus">
-    <option value="online">Online</option>
-    <option value="offline">Offline</option>
-  </select>
+<div *ngIf="allowEdit">
+  <div class="form-group">
+    <label for="name">Server Name</label>
+    <input
+      type="text"
+      id="name"
+      class="form-control"
+      [(ngModel)]="serverName"
+      value="server.name"
+    >
+  </div>
+  <div class="form-group">
+    <label for="status">Server Status</label>
+    <select
+      id="status"
+      class="form-control"
+      [(ngModel)]="serverStatus">
+      <option value="online">Online</option>
+      <option value="offline">Offline</option>
+    </select>
+    <button
+      class="btn btn-primary"
+      (click)="onUpdateServer()" [disabled]="!allowEdit"
+    >
+      Update Server
+    </button>
+  </div>
 </div>
-<button
-  class="btn btn-primary"
-  (click)="onUpdateServer()">Update Server</button>
