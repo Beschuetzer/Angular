@@ -7,7 +7,7 @@ import { HeaderComponent } from './header/header.component';
 import { RecipeListComponent } from './recipes/recipe-list/recipe-list.component';
 import { RecipeItemComponent } from './recipes/recipe-item/recipe-item.component';
 import { RecipeDetailComponent } from './recipes/recipe-detail/recipe-detail.component';
-import { RecipeComponent } from './recipes/recipes.component';
+import { RecipesComponent } from './recipes/recipes.component';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 import { ShoppingListEditComponent } from './shopping-list/shopping-list-edit/shopping-list-edit.component';
 import { FormsModule } from '@angular/forms';
@@ -21,7 +21,7 @@ import { DropdownGlobalDirective } from './directives/dropdown-global.directive'
     RecipeListComponent,
     RecipeItemComponent,
     RecipeDetailComponent,
-    RecipeComponent,
+    RecipesComponent,
     ShoppingListComponent,
     ShoppingListEditComponent,
     DropdownDirective,

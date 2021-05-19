@@ -10,12 +10,6 @@ import { LinkNames } from '../models/enums';
 })
 export class HeaderComponent {
   collapsed = true
-  @Output() emitClickedLinkName = new EventEmitter<string>();
-
-  handleLinkClick(e: Event, linkName: string) {
-    e.preventDefault();
-    this.emitClickedLinkName.emit(linkName);
-  }
 }
 
 

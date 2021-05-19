@@ -6,7 +6,7 @@ import { RecipesService } from './recipes.service';
   templateUrl: './recipes.component.html',
   styleUrls: ['./recipes.component.scss']
 })
-export class RecipeComponent implements OnInit {
+export class RecipesComponent implements OnInit {
   public clickedRecipe: Recipe;
   constructor(private recipesService: RecipesService) { }
 

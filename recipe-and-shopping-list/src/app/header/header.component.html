@@ -8,15 +8,26 @@
     </div>
     <div class="navbar-collapse" [class.collapse]="collapsed" (window:resize)="collapsed = true">
       <ul class="nav navbar-nav">
-        <li><a (click)="handleLinkClick($event, 'recipes')" href="#">Recipes</a></li>
-        <li><a (click)="handleLinkClick($event, 'shopping-list')" href="#">Shopping List</a></li>
+        <li 
+          [routerLinkActive]="'active'"
+        >
+        <a 
+            [routerLink]="['/recipes']"
+          >Recipes</a>
+        </li>
+        <li [routerLinkActive]="'active'">
+          <a 
+            [routerLink]="['/shopping-list']"
+          >Shopping List
+          </a>
+        </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         <li appDropdownGlobal class='dropdown'>
-          <a href="#" class='dropdown-toggle'>Manage <span class="caret"></span></a>
+          <a class='dropdown-toggle cursor-pointer'>Manage <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li class=""><a href="#">Save Data</a></li>
-            <li class=""><a href="#">Load Data</a></li>
+            <li class=""><a class="cursor-pointer">Save Data</a></li>
+            <li class=""><a class="cursor-pointer">Load Data</a></li>
           </ul>
         </li>
       </ul>
