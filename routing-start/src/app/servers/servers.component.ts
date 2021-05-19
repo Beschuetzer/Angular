@@ -18,12 +18,9 @@ export class ServersComponent implements OnInit {
 
   ngOnInit() {
     this.servers = this.serversService.getServers();
-    console.log('this.servers =', this.servers);
   }
 
   onReload() {
-    console.log('route =', this.route);
-    // this.router.navigate(['servers'], {relativeTo: this.route});
   }
 
 }

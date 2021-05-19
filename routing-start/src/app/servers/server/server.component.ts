@@ -20,14 +20,20 @@ export class ServerComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    this.server = this.serversService.getServer(+this.route.snapshot.params.id);
-    this.paramsSubscription = this.route.params.subscribe((params) => {
-      this.server = this.serversService.getServer(+params.id);
+    //Note: using a resolver
+    this.route.data.subscribe((data) => {
+      this.server = data.server;
     })
+
+    //Note: If not using a resolver to get the server data
+    // this.server = this.serversService.getServer(+this.route.snapshot.params.id);
+    // this.paramsSubscription = this.route.params.subscribe((params) => {
+    //   this.server = this.serversService.getServer(+params.id);
+    // })
   }
 
   ngOnDestroy() {
-    this.paramsSubscription.unsubscribe();
+    // this.paramsSubscription.unsubscribe();
   }
 
   onEdit() {
