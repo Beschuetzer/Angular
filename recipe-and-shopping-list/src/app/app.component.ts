@@ -7,10 +7,5 @@ import { Component, ViewEncapsulation } from '@angular/core';
   encapsulation: ViewEncapsulation.None, 
 })
 export class AppComponent {
-  public title: string = 'recipe-and-shopping-list';
-  public clickedLink: string = 'recipes';
-
-  handleLinkClick(linkName: string) {
-    this.clickedLink = linkName;
-  }
+  
 }

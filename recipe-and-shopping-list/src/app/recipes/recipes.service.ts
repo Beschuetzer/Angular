@@ -1,4 +1,5 @@
 import { EventEmitter, Injectable, Output } from '@angular/core';
+import { Subject } from 'rxjs';
 import { Ingredient } from '../models/ingredient.model';
 
 import { Recipe } from '../models/recipe.model';
@@ -24,8 +25,7 @@ export class RecipesService {
       [new Ingredient('Buns', 2), new Ingredient('Meat', 3), new Ingredient('Ketchup', 5)]
     ),
   ];
-  updateClickedRecipe = new EventEmitter<Recipe>();
-  updateRecipes = new EventEmitter<Recipe[]>();
+  updateRecipes = new Subject<Recipe[]>();
 
   constructor() {}
 
@@ -47,13 +47,8 @@ export class RecipesService {
     this.recipes.push(recipe);
   }
 
-  setClickedRecipe(recipe: Recipe) {
-    this.clickedRecipe = recipe;
-    this.updateClickedRecipe.emit(this.clickedRecipe);
-  }
-
   getUpdatedRecipes() {
-    this.updateRecipes.emit(this.recipes);
+    this.updateRecipes.next(this.recipes);
   }
 
   deleteRecipe(index: number) {
