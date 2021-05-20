@@ -8,9 +8,26 @@ import { NgForm } from '@angular/forms';
 })
 export class AppComponent {
   @ViewChild('f') signUpForm: NgForm;
+  defaultQuestion = "pet";
+  answer = "";
+  genders = ['Male', 'Female'];
+  submitted = false;
+
+  user = {
+    username: '',
+    email: '',
+    secret: '',
+    questionAnswer: '',
+    gender: '',
+  }
   
-  suggestUserName() {
+  suggestUsername() {
     const suggestedName = 'Superuser';
+    this.signUpForm.form.patchValue({
+      userData: {
+        username: suggestedName,
+      }
+    })
   }
 
   // onSubmit(form: HTMLFormElement) {
@@ -20,6 +37,12 @@ export class AppComponent {
 
   onSubmit() {
     //NOTE: accessing signUpForm from local ref and @ViewChild
-    console.log('this.signUpForm =', this.signUpForm);
+    this.user.username = this.signUpForm.form.value.userData.username;
+    this.user.email = this.signUpForm.form.value.userData.email;
+    this.user.secret = this.signUpForm.form.value.secret;
+    this.user.questionAnswer = this.signUpForm.form.value.questionAnswer;
+    this.user.gender = this.signUpForm.form.value.gender;
+
+    this.submitted = true;
   }
 }
