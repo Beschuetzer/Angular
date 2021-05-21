@@ -10,13 +10,29 @@
             id="username3"
             class="form-control"
             [formControlName]="'username'"
+            #usernameField
           >
-          <span
+          <div
+            *ngIf="signUpForm.get('userData.username').touched"
+          >
+            <span
+              *ngFor="let errorKey of usernameErrorKeys"
+            >
+              <span
+                *ngIf="errorKey?.toLowerCase().trim() === 'invalidname'"
+              >
+                {{ usernameField.value }}
+              </span>
+              {{ errorMessages[errorKey] }}
+            </span>
+          </div>
+
+          <!-- <span
             *ngIf="signUpForm.get('userData.username').touched && !signUpForm.get('userData.username').valid"
             class="help-block"
           >
             Enter a valid Username!
-          </span>
+          </span> -->
         </div>
         <div class="form-group">
           <label for="email">email</label>
