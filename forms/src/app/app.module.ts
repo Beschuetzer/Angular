@@ -6,12 +6,14 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { AssignmentSixComponent } from './assignment-six/assignment-six.component';
 import { ReactiveFormComponent } from './reactive-form/reactive-form.component';
+import { AssignmentSevenComponent } from './assignment-seven/assignment-seven.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AssignmentSixComponent,
-    ReactiveFormComponent
+    ReactiveFormComponent,
+    AssignmentSevenComponent
   ],
   imports: [
     BrowserModule,

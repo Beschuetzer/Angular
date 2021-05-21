@@ -1,0 +1,89 @@
+<div class="row">
+  <div class="col-xs-12 col-sm-10 col-md-8 col-sm-offset-1 col-md-offset-2">
+    <h3 class="jumbotron text-center">Assignment Seven</h3>
+      <form (ngSubmit)="onSubmitClick()" [formGroup]="form">
+        <div formGroupName="project" class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label style="display: block;">
+                Project Name:
+                <input 
+                  formControlName="name"
+                  type="text" 
+                  class="form-control"
+                  #projectName
+                >
+              </label>
+              <div 
+                *ngIf="form.get('project.name').touched"
+                class="help-block"
+              >
+              <span
+                *ngFor="let errorKey of getErrorKeys('project.name')"
+              >
+                <span
+                  *ngIf="errorKey?.toLowerCase() === 'invalidname'"
+                >
+                  '{{ projectName.value }}'
+                </span>
+                {{ errorMessages['name'][errorKey] }}
+              </span>
+              </div>
+            </div>
+          </div>
+          <div class="col-xs-6">
+            <div class="form-group">
+             
+              <label style="display: block;">
+                Project Status:
+                <select 
+                  formControlName="status"
+                  type="text" 
+                  class="form-control">
+                  <option
+                    *ngFor="let status of projectsStatuses"
+                    [value]="status"
+                  >
+                    {{ status }}
+                  </option>
+                </select>
+              </label>
+              <div 
+                *ngFor="let errorKey of getErrorKeys('project.status')"
+                class="help-block"
+              >
+                <span
+                  *ngIf="form.get('project.status').touched"
+                >{{ errorMessages['status'][errorKey] }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-xs-6">
+            <div class="form-group">
+              <label style="display: block;">
+                Email:
+                <input 
+                  formControlName='email'
+                  type="text" 
+                  class="form-control">
+              </label>
+              <div 
+                *ngFor="let errorKey of getErrorKeys('email')"
+                class="help-block"
+              >
+                <span
+                  *ngIf="form.get('email').touched"
+                >{{ errorMessages['email'][errorKey] }}</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <button
+          [disabled]="!form.valid"
+          type="submit"
+          class="btn btn-primary">Submit</button>
+      </form>
+  </div>
+</div>
