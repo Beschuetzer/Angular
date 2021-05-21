@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-reactive-form',
@@ -13,7 +14,7 @@ export class ReactiveFormComponent implements OnInit {
 
   errorMessages = {
     required: 'This field is required!',
-    invalidName: 'is an invalid name!',
+    invalidName: 'is an invalid Username!',
     minlength: 'Username must be 4 characters long.',
     maxlength: 'Username must be 12 or fewer characters long.'
   }
@@ -35,12 +36,32 @@ export class ReactiveFormComponent implements OnInit {
     this.signUpForm = new FormGroup({
       //NOTE: using a string as a key to make sure that minification doesn't mess up the key
       'userData': new FormGroup({
-        'username': new FormControl(null, [Validators.required, Validators.minLength(4), Validators.maxLength(12), this.getIsForbiddenName.bind(this)]),  //null = no default value
-        'email': new FormControl(null, [Validators.required, Validators.email]),
+        'username': new FormControl(
+          null, 
+          [
+            Validators.required,
+            Validators.minLength(4),
+            Validators.maxLength(12),
+            this.getIsForbiddenName.bind(this)
+          ]
+        ),
+        'email': new FormControl(
+          null,
+          [
+            Validators.required,
+            Validators.email,
+          ],
+          [
+            this.getIsForbiddenEmail.bind(this),
+          ],
+        ),
       }),
       'gender': new FormControl('male'),
       'hobbies': new FormArray([]),
     });
+    this.signUpForm.valueChanges.subscribe((valuesChanged) => {
+      console.log('valuesChanged =', valuesChanged);
+    })
   }
 
   onAddHobby() {
@@ -50,14 +71,12 @@ export class ReactiveFormComponent implements OnInit {
 
   onRemoveHobby(index: number) {
     (this.signUpForm.get('hobbies') as FormArray).removeAt(index);
-    // this.signUpForm.patchValue({
-    //   "hobbies": newFormArray
-    // })
-    
   }
 
   onSubmit() {
-    console.log('this.signUpForm =', this.signUpForm);
+    this.signUpForm.reset({
+      gender: 'male',
+    })
   }
 
   //NOTE: This is a custom validator
@@ -71,5 +90,19 @@ export class ReactiveFormComponent implements OnInit {
 
     //NOTE: must pass null or omit return statement to tell Angular that the validator passes
     return null;
+  }
+
+  //NOTE: Async validator
+  getIsForbiddenEmail(control: FormControl): Promise<any> | Observable<any> {
+    console.log('control.value =', control.value);
+    const promise = new Promise((resolve, reject) => {
+      setTimeout(() => {
+        if (control.value === 'test@test.com') {
+          resolve({'invalidEmail': true});
+        }
+        else resolve(null);
+      }, 1500)
+    });
+    return promise;
   }
 }

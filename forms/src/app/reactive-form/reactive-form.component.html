@@ -26,13 +26,6 @@
               {{ errorMessages[errorKey] }}
             </span>
           </div>
-
-          <!-- <span
-            *ngIf="signUpForm.get('userData.username').touched && !signUpForm.get('userData.username').valid"
-            class="help-block"
-          >
-            Enter a valid Username!
-          </span> -->
         </div>
         <div class="form-group">
           <label for="email">email</label>
@@ -70,7 +63,7 @@
             *ngFor="let hobby of controls; let i = index"
             class="form-group col-xs-6"
           >
-            <label>
+            <label style='display: block;'>
               {{ i + 1 }}{{ i === 0 ? 'st' : i === 1 ? 'nd' : i === 2 ? 'rd' : 'th' }} Hobby:
               <input  
                 class="form-control" 
