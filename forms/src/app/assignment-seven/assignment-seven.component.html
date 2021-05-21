@@ -14,21 +14,11 @@
                   #projectName
                 >
               </label>
-              <div 
-                *ngIf="form.get('project.name').touched"
-                class="help-block"
-              >
-              <span
-                *ngFor="let errorKey of getErrorKeys('project.name')"
-              >
-                <span
-                  *ngIf="errorKey?.toLowerCase() === 'invalidname'"
-                >
-                  '{{ projectName.value }}'
-                </span>
-                {{ errorMessages['name'][errorKey] }}
-              </span>
-              </div>
+              <app-error-message
+                [formControl]="form.get('project.name')"
+                controlName="name"
+                [nameToDisplay]="projectName"
+              ></app-error-message>
             </div>
           </div>
           <div class="col-xs-6">
@@ -48,14 +38,10 @@
                   </option>
                 </select>
               </label>
-              <div 
-                *ngFor="let errorKey of getErrorKeys('project.status')"
-                class="help-block"
-              >
-                <span
-                  *ngIf="form.get('project.status').touched"
-                >{{ errorMessages['status'][errorKey] }}</span>
-              </div>
+              <app-error-message
+                [formControl]="form.get('project.status')"
+                controlName="status"
+              ></app-error-message>
             </div>
           </div>
         </div>
@@ -67,16 +53,15 @@
                 <input 
                   formControlName='email'
                   type="text" 
-                  class="form-control">
+                  class="form-control"
+                  #emailName
+                >
               </label>
-              <div 
-                *ngFor="let errorKey of getErrorKeys('email')"
-                class="help-block"
-              >
-                <span
-                  *ngIf="form.get('email').touched"
-                >{{ errorMessages['email'][errorKey] }}</span>
-              </div>
+              <app-error-message
+                [formControl]="form.get('email')"
+                controlName="email"
+                [nameToDisplay]="emailName"
+              ></app-error-message>
             </div>
           </div>
         </div>

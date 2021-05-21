@@ -13,21 +13,6 @@ export class AssignmentSevenComponent implements OnInit {
   projectsStatuses = ['Critical', 'Stable', 'Finished'];
   invalidProjectNames = ['Project-Test'];
 
-  errorMessages = {
-    name: {
-      required: 'Project name is required',
-      pattern: 'Project name must start with "Project-"',
-      invalidName: 'is an invalid project name',
-    },
-    status: {
-
-    },
-    email: {
-      required: 'Email is required',
-      email: 'is an invalid Email',
-    },
-  }
-
   constructor() { }
 
   ngOnInit(): void {
@@ -72,21 +57,7 @@ export class AssignmentSevenComponent implements OnInit {
     return promise;
   }
 
-  getErrorKeys (componentPath: string) {
-    const splitPath = componentPath.split('.');
-    let controls = this.form.controls;
-    let component;
-
-    for (let i = 0; i < splitPath.length; i++) {
-      const componentName = splitPath[i];
-      
-      if (i==0) component = controls[componentName];
-      else component = component.controls[componentName];
-    }
-
-    if (component.errors) return Object.keys(component.errors);
-    else return [];
-  }
+  
 
   onSubmitClick() {
     console.log('this.form =', this.form);

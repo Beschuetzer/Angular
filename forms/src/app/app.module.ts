@@ -7,13 +7,15 @@ import { AppComponent } from './app.component';
 import { AssignmentSixComponent } from './assignment-six/assignment-six.component';
 import { ReactiveFormComponent } from './reactive-form/reactive-form.component';
 import { AssignmentSevenComponent } from './assignment-seven/assignment-seven.component';
+import { ErrorMessageComponent } from './assignment-seven/error-message/error-message.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     AssignmentSixComponent,
     ReactiveFormComponent,
-    AssignmentSevenComponent
+    AssignmentSevenComponent,
+    ErrorMessageComponent
   ],
   imports: [
     BrowserModule,

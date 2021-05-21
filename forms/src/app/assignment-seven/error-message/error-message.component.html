@@ -1,0 +1,15 @@
+<div 
+  *ngIf="formControl?.touched"
+  class="help-block"
+>
+  <span
+    *ngFor="let errorKey of errorKeys"
+  >
+    <span
+      *ngIf="errorKey?.toLowerCase() === 'invalidname'"
+    >
+      '{{ nameToDisplay ? nameToDisplay.value : ''}}'
+    </span>
+    {{ errorMessages[controlName] ? errorMessages[controlName][errorKey] : ''}}
+  </span>
+</div>
