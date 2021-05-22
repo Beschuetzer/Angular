@@ -1,5 +1,6 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Subscription } from 'rxjs';
 import { Ingredient } from 'src/app/models/ingredient.model';
 import { ShoppingListService } from '../shopping-list.service';
 
@@ -8,8 +9,9 @@ import { ShoppingListService } from '../shopping-list.service';
   templateUrl: './shopping-list-edit.component.html',
   styleUrls: ['./shopping-list-edit.component.scss']
 })
-export class ShoppingListEditComponent implements OnInit {
+export class ShoppingListEditComponent implements OnInit, OnDestroy {
   form: FormGroup;
+  sendClickedIngredientSubscription: Subscription;
   
   constructor(private shoppingListService: ShoppingListService) { }
 
@@ -29,12 +31,16 @@ export class ShoppingListEditComponent implements OnInit {
       )
     });
 
-    this.shoppingListService.sendClickedIngredient.subscribe((ingredient) => {
+    this.sendClickedIngredientSubscription = this.shoppingListService.sendClickedIngredient.subscribe((ingredient) => {
       this.form.reset({
         name: ingredient.name,
         amount: ingredient.amount,
       })
     })
+  }
+
+  ngOnDestroy() {
+    this.sendClickedIngredientSubscription.unsubscribe();
   }
 
   onFormSubmit() {
@@ -43,19 +49,16 @@ export class ShoppingListEditComponent implements OnInit {
     this.shoppingListService.addIngredient(newIngredient);
   }
 
-  onClickDeleteClick(e: Event) {
-    // const { name } = this.getIsValidInputs();
-    // this.shoppingListService.deleteIngredient(name);
-  }
-  
   onClickClearClick(e: Event) {
     this.form.reset();
   }
-  
-  // getIsValidInputs() {
-  //   const nameInputElement = this.nameInput.nativeElement;
-  //   const amountInputElement = this.amountInput.nativeElement;
-  //   if (nameInputElement.value !== '' && amountInputElement.value !== '') return {name: nameInputElement.value, amount: amountInputElement.value, shouldContinue: true};
-  //   return {name: nameInputElement.value, amount: amountInputElement.value, shouldContinue: false};
-  // }
+
+  onNameInputChange(name: string) {
+    const clickedIngredient = this.shoppingListService.getClickedIngredient();
+    if (clickedIngredient.name.toLowerCase() !== name.toLowerCase()) {
+      this.shoppingListService.clearIngredients(document.querySelector('#ingredients'));
+      this.shoppingListService.updateCanDeleteIngredient(false);
+    }
+  }
+
 }

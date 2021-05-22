@@ -26,13 +26,13 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   }
 
   clickIngredient(e: Event, ingredientList: HTMLUListElement, clickedIngredient: Ingredient) {
-    const children = ingredientList.childNodes;
-    for (let i = 0; i < children.length; i++) {
-      const child = children[i] as HTMLAnchorElement;
-      if (child.localName !== 'a') break;
-      child?.classList.remove('active');
-    }
+    this.shoppingListService.clearIngredients(ingredientList);
     (e.target as HTMLAnchorElement)?.classList.toggle('active');
     this.shoppingListService.updateClickedIngredient(clickedIngredient);
+    this.shoppingListService.updateCanDeleteIngredient(true);
+  }
+
+  onDeleteItemClick(ingredient: Ingredient) {
+    this.shoppingListService.deleteIngredient(ingredient.name);
   }
 }

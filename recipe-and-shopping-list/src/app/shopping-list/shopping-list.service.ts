@@ -7,8 +7,11 @@ import { Ingredient } from '../models/ingredient.model';
 })
 export class ShoppingListService {
   public sendClickedIngredient = new Subject<Ingredient>();
+  public sendCanDeleteIngredient = new Subject<boolean>();
   public updateIngredients = new Subject<Ingredient[]>();
+  
   private clickedIngredient = null;
+  private canDeleteIngredient = false;
   private ingredients: Ingredient[] = [
     new Ingredient('Apples', 5),
     new Ingredient('Oranges', 10),
@@ -74,6 +77,23 @@ export class ShoppingListService {
     return this.ingredients.findIndex(ingredient2 => ingredient2.name?.toLowerCase() === ingredient.name?.toLowerCase());
   }
 
+  clearIngredients(ingredients: HTMLUListElement) {
+    const children = ingredients.querySelectorAll('a');
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i] as HTMLAnchorElement;
+      if (child.localName !== 'a') break;
+      child?.classList.remove('active');
+    }
+  }
+
+  getCanDeleteIngredient() {
+    return this.canDeleteIngredient;
+  }
+
+  getClickedIngredient() {
+    return {...this.clickedIngredient};
+  }
+
   sendUpdatedIngredients() {
     this.updateIngredients.next(this.ingredients.slice());
   }
@@ -81,5 +101,10 @@ export class ShoppingListService {
   updateClickedIngredient(ingredient: Ingredient) {
     this.clickedIngredient = ingredient;
     this.sendClickedIngredient.next(this.clickedIngredient);
+  }
+
+  updateCanDeleteIngredient(value) {
+    this.canDeleteIngredient = value;
+    this.sendCanDeleteIngredient.next(this.canDeleteIngredient);
   }
 }

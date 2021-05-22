@@ -10,6 +10,7 @@
             id="name" 
             class="form-control"
             formControlName="name"
+            (ngModelChange)="onNameInputChange($event)"
             #nameField
           >
           <app-error-message
@@ -42,13 +43,6 @@
             [disabled]="!form.valid"
           >
             Add
-          </button>
-          <button 
-            class="btn btn-danger" 
-            type="button"
-            (click)="onClickDeleteClick($event)"
-          >
-            Delete
           </button>
           <button 
             class="btn btn-warning" 
