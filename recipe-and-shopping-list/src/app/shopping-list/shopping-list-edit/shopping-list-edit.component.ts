@@ -42,31 +42,16 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     });
   }
 
-  ngOnInit(): void {
-    this.clickedIngredient = this.shoppingListService.getClickedIngredient();
-    this.clickedIngredientSubscription = this.shoppingListService.sendClickedIngredient.subscribe((Ingredient) => {
-      this.clickedIngredient = Ingredient;
-    })
-
-    this.sendCheckShouldResetFromAfterDeleteSubscription = this.shoppingListService.sendCheckShouldResetFromAfterDelete.subscribe((ingredient) => {
-      this.checkShouldResetForm(ingredient);
-    })
-    
-    this.sendClickedIngredientSubscription = this.shoppingListService.sendClickedIngredient.subscribe((ingredient) => {
-      if (ingredient) {
-        this.form.reset({
-          name: ingredient.name,
-          amount: ingredient.amount,
-        });
-      }
-    })
-    this.initializeForm();
-  }
-
   ngOnDestroy() {
     this.sendClickedIngredientSubscription.unsubscribe();
     this.clickedIngredientSubscription.unsubscribe();
     this.sendCheckShouldResetFromAfterDeleteSubscription.unsubscribe();
+  }
+
+  ngOnInit(): void {
+    this.clickedIngredient = this.shoppingListService.getClickedIngredient();
+    this.setupSubscriptions();
+    this.initializeForm();
   }
 
   onFormSubmit() {
@@ -92,5 +77,24 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     this.form.reset({
       amount: this.amountMin,
     });
+  }
+
+  setupSubscriptions() {
+    this.clickedIngredientSubscription = this.shoppingListService.sendClickedIngredient.subscribe((Ingredient) => {
+      this.clickedIngredient = Ingredient;
+    })
+
+    this.sendCheckShouldResetFromAfterDeleteSubscription = this.shoppingListService.sendCheckShouldResetFromAfterDelete.subscribe((ingredient) => {
+      this.checkShouldResetForm(ingredient);
+    })
+    
+    this.sendClickedIngredientSubscription = this.shoppingListService.sendClickedIngredient.subscribe((ingredient) => {
+      if (ingredient) {
+        this.form.reset({
+          name: ingredient.name,
+          amount: ingredient.amount,
+        });
+      }
+    })
   }
 }

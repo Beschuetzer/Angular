@@ -1,4 +1,6 @@
 $red: #d9534f;
+$blue: #337ab7;
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -6,9 +8,23 @@ $red: #d9534f;
 //styling invalid and touched inputs
 :is(input, select).ng-invalid.ng-touched{
   border: 1px solid $red;
+
+  & + * .help-block{
+    margin: 0 0 -10px 0;
+    
+  }
+}
+
+:is(input, select).ng-valid.ng-touched{
+  border: 1px solid rgba($blue, .5);
 }
 
 :is(input, select).ng-invalid.ng-touched + * .help-block {
   color: $red;
   font-weight: 900;
+}
+
+#ingredients {
+  height: 72.5vh; 
+  overflow: auto;
 }
