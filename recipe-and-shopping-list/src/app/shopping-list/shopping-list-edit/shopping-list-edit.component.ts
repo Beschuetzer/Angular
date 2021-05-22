@@ -12,10 +12,19 @@ import { ShoppingListService } from '../shopping-list.service';
 export class ShoppingListEditComponent implements OnInit, OnDestroy {
   form: FormGroup;
   sendClickedIngredientSubscription: Subscription;
+  clickedIngredientSubscription: Subscription;
+  
+  clickedIngredient: Ingredient;
   
   constructor(private shoppingListService: ShoppingListService) { }
 
   ngOnInit(): void {
+    this.clickedIngredient = this.shoppingListService.getClickedIngredient();
+
+    this.clickedIngredientSubscription = this.shoppingListService.sendClickedIngredient.subscribe((Ingredient) => {
+      this.clickedIngredient = Ingredient;
+    })
+
     this.form = new FormGroup({
       name: new FormControl(
         null,
@@ -32,15 +41,19 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     });
 
     this.sendClickedIngredientSubscription = this.shoppingListService.sendClickedIngredient.subscribe((ingredient) => {
-      this.form.reset({
-        name: ingredient.name,
-        amount: ingredient.amount,
-      })
+      if (ingredient) {
+        this.form.reset({
+          name: ingredient.name,
+          amount: ingredient.amount,
+        });
+      }
+      // else this.form.reset({});
     })
   }
 
   ngOnDestroy() {
     this.sendClickedIngredientSubscription.unsubscribe();
+    this.clickedIngredientSubscription.unsubscribe();
   }
 
   onFormSubmit() {
@@ -54,8 +67,9 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   }
 
   onNameInputChange(name: string) {
+    
     const clickedIngredient = this.shoppingListService.getClickedIngredient();
-    if (clickedIngredient.name.toLowerCase() !== name.toLowerCase()) {
+    if (clickedIngredient?.name?.toLowerCase() !== name?.toLowerCase()) {
       this.shoppingListService.clearIngredients(document.querySelector('#ingredients'));
       this.shoppingListService.updateCanDeleteIngredient(false);
     }

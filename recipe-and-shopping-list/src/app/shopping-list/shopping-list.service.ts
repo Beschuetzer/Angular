@@ -26,8 +26,7 @@ export class ShoppingListService {
     if (ingredient instanceof Ingredient) {
       const ingredientIndex = this.getIngredientIndex(ingredient);
       if (ingredientIndex !== -1) {
-        this.ingredients[ingredientIndex].amount = ingredient.amount;
-        return alert(`${ingredient.name} is already in the list.  Updating the current value`);
+        return this.ingredients[ingredientIndex].amount = ingredient.amount;
       }
 
       this.ingredients.push(ingredient);
@@ -84,6 +83,8 @@ export class ShoppingListService {
       if (child.localName !== 'a') break;
       child?.classList.remove('active');
     }
+    this.clickedIngredient = null;
+    this.sendClickedIngredient.next(null);
   }
 
   getCanDeleteIngredient() {
@@ -100,7 +101,7 @@ export class ShoppingListService {
 
   updateClickedIngredient(ingredient: Ingredient) {
     this.clickedIngredient = ingredient;
-    this.sendClickedIngredient.next(this.clickedIngredient);
+    this.sendClickedIngredient.next({...this.clickedIngredient});
   }
 
   updateCanDeleteIngredient(value) {
