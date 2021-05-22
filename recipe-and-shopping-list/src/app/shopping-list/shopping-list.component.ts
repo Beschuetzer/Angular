@@ -24,4 +24,15 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.updateIngredientsSubscription.unsubscribe();
   }
+
+  clickIngredient(e: Event, ingredientList: HTMLUListElement, clickedIngredient: Ingredient) {
+    const children = ingredientList.childNodes;
+    for (let i = 0; i < children.length; i++) {
+      const child = children[i] as HTMLAnchorElement;
+      if (child.localName !== 'a') break;
+      child?.classList.remove('active');
+    }
+    (e.target as HTMLAnchorElement)?.classList.toggle('active');
+    this.shoppingListService.updateClickedIngredient(clickedIngredient);
+  }
 }

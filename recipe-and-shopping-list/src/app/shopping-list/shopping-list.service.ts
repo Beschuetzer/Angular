@@ -6,7 +6,9 @@ import { Ingredient } from '../models/ingredient.model';
   providedIn: 'root'
 })
 export class ShoppingListService {
+  public sendClickedIngredient = new Subject<Ingredient>();
   public updateIngredients = new Subject<Ingredient[]>();
+  private clickedIngredient = null;
   private ingredients: Ingredient[] = [
     new Ingredient('Apples', 5),
     new Ingredient('Oranges', 10),
@@ -54,7 +56,7 @@ export class ShoppingListService {
     this.sendUpdatedIngredients();
   }
 
-  clearIngredients() {
+  deleteIngredients() {
     this.ingredients = [];
     this.sendUpdatedIngredients();
   }
@@ -74,5 +76,10 @@ export class ShoppingListService {
 
   sendUpdatedIngredients() {
     this.updateIngredients.next(this.ingredients.slice());
+  }
+
+  updateClickedIngredient(ingredient: Ingredient) {
+    this.clickedIngredient = ingredient;
+    this.sendClickedIngredient.next(this.clickedIngredient);
   }
 }
