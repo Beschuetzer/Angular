@@ -10,21 +10,22 @@ import { ShoppingListService } from '../shopping-list.service';
   styleUrls: ['./shopping-list-edit.component.scss']
 })
 export class ShoppingListEditComponent implements OnInit, OnDestroy {
+  @ViewChild('nameField') nameField: ElementRef;
+  @ViewChild('amountField') amountField: ElementRef;
   form: FormGroup;
   sendClickedIngredientSubscription: Subscription;
   clickedIngredientSubscription: Subscription;
-  
+  sendCheckShouldResetFromAfterDeleteSubscription: Subscription;
   clickedIngredient: Ingredient;
+  amountMin = 1;
   
   constructor(private shoppingListService: ShoppingListService) { }
 
-  ngOnInit(): void {
-    this.clickedIngredient = this.shoppingListService.getClickedIngredient();
+  checkShouldResetForm(ingredient: Ingredient) {
+    if (+this.amountField.nativeElement.value === ingredient.amount && this.nameField.nativeElement.value.toLowerCase() === ingredient.name.toLowerCase()) this.resetForm();
+  }
 
-    this.clickedIngredientSubscription = this.shoppingListService.sendClickedIngredient.subscribe((Ingredient) => {
-      this.clickedIngredient = Ingredient;
-    })
-
+  initializeForm() {
     this.form = new FormGroup({
       name: new FormControl(
         null,
@@ -33,13 +34,24 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
         ],
       ),
       amount: new FormControl(
-        0,
+        this.amountMin,
         [
-          Validators.required, Validators.min(1),
+          Validators.required, Validators.min(this.amountMin),
         ],
       )
     });
+  }
 
+  ngOnInit(): void {
+    this.clickedIngredient = this.shoppingListService.getClickedIngredient();
+    this.clickedIngredientSubscription = this.shoppingListService.sendClickedIngredient.subscribe((Ingredient) => {
+      this.clickedIngredient = Ingredient;
+    })
+
+    this.sendCheckShouldResetFromAfterDeleteSubscription = this.shoppingListService.sendCheckShouldResetFromAfterDelete.subscribe((ingredient) => {
+      this.checkShouldResetForm(ingredient);
+    })
+    
     this.sendClickedIngredientSubscription = this.shoppingListService.sendClickedIngredient.subscribe((ingredient) => {
       if (ingredient) {
         this.form.reset({
@@ -47,27 +59,28 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
           amount: ingredient.amount,
         });
       }
-      // else this.form.reset({});
     })
+    this.initializeForm();
   }
 
   ngOnDestroy() {
     this.sendClickedIngredientSubscription.unsubscribe();
     this.clickedIngredientSubscription.unsubscribe();
+    this.sendCheckShouldResetFromAfterDeleteSubscription.unsubscribe();
   }
 
   onFormSubmit() {
     const { name, amount } = this.form.value;
     const newIngredient = new Ingredient(name, amount);
     this.shoppingListService.addIngredient(newIngredient);
+    this.resetForm();
   }
 
   onClickClearClick(e: Event) {
-    this.form.reset();
+    this.resetForm();
   }
 
   onNameInputChange(name: string) {
-    
     const clickedIngredient = this.shoppingListService.getClickedIngredient();
     if (clickedIngredient?.name?.toLowerCase() !== name?.toLowerCase()) {
       this.shoppingListService.clearIngredients(document.querySelector('#ingredients'));
@@ -75,4 +88,9 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
     }
   }
 
+  resetForm() {
+    this.form.reset({
+      amount: this.amountMin,
+    });
+  }
 }

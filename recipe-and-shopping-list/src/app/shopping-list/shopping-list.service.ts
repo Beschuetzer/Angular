@@ -8,6 +8,7 @@ import { Ingredient } from '../models/ingredient.model';
 export class ShoppingListService {
   public sendClickedIngredient = new Subject<Ingredient>();
   public sendCanDeleteIngredient = new Subject<boolean>();
+  public sendCheckShouldResetFromAfterDelete = new Subject<Ingredient>();
   public updateIngredients = new Subject<Ingredient[]>();
   
   private clickedIngredient = null;
@@ -97,6 +98,10 @@ export class ShoppingListService {
 
   sendUpdatedIngredients() {
     this.updateIngredients.next(this.ingredients.slice());
+  }
+
+  sendCheckShouldClearAfterDelete(ingredient: Ingredient) {
+    this.sendCheckShouldResetFromAfterDelete.next(ingredient);
   }
 
   updateClickedIngredient(ingredient: Ingredient) {
