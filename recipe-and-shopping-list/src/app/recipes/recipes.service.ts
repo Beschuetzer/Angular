@@ -30,6 +30,16 @@ export class RecipesService {
 
   constructor() {}
 
+  addRecipe(recipe: Recipe) {
+    this.recipes.push(recipe);
+    this.sendNewRecipes();
+  }
+
+  //Getter returning a copy 
+  getClickedRecipe() {
+    return {...this.clickedRecipe};
+  }
+
   getRecipe(index: number) {
     return this.recipes[index];
   }
@@ -39,19 +49,8 @@ export class RecipesService {
     return this.recipes.slice();
   }
 
-  //Getter returning a copy 
-  getClickedRecipe() {
-    return {...this.clickedRecipe};
-  }
-
-  addRecipe(recipe: Recipe) {
-    this.recipes.push(recipe);
-    this.sendNewRecipes();
-  }
-
-  updateRecipe(index: number, newRecipe: Recipe) {
-    this.recipes[index] = newRecipe;
-    this.sendNewRecipes();
+  getRecipesLength() {
+    return this.recipes.length;
   }
 
   getUpdatedRecipes() {
@@ -60,6 +59,11 @@ export class RecipesService {
 
   deleteRecipe(index: number) {
     return this.recipes.splice(index, 1);
+  }
+
+  updateRecipe(index: number, newRecipe: Recipe) {
+    this.recipes[index] = newRecipe;
+    this.sendNewRecipes();
   }
 
   private sendNewRecipes() {

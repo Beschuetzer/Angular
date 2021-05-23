@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Form, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Ingredient } from 'src/app/models/ingredient.model';
 import { Recipe } from 'src/app/models/recipe.model';
 import { RecipesService } from '../recipes.service';
@@ -29,23 +29,40 @@ export class RecipeEditComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private recipesService: RecipesService,
+    private router: Router,
   ) { }
 
-  handleFormValueChange(){
+  checkCanHandleValueChange() {
     if (this.autoSaveTimeoutId) clearTimeout(this.autoSaveTimeoutId);
     if (!this.form.valid || this.canSave === false) {
       this.hasSaved = false;
       this.autoSaveTimeoutId = setTimeout(() => {
         this.handleFormValueChange();
       }, (Date.now() - this.timeOfLastSave));
-      return;
+      return null;
     }
 
     this.canSave = false;
     setTimeout(() => {
       this.canSave = true;
     }, this.canSaveInterval)
+    return 1;
+  }
 
+  handleFormValueChange(){
+    const shouldContinue = this.checkCanHandleValueChange();
+    if (!shouldContinue) return;
+
+    const paramId = this.route.snapshot.params.id;
+    if (paramId) {
+      this.updateSavedForm();
+    } else {
+      this.saveNewForm();
+      this.router.navigate(['/recipes', (this.recipesService.getRecipesLength() - 1), 'edit']);
+    }
+  }
+
+  getNewRecipe() {
     const { name, description, imagePath, ingredients } = this.form.value;
     const newRecipe = new Recipe(this.id, name, description, imagePath, []);
     
@@ -55,8 +72,20 @@ export class RecipeEditComponent implements OnInit {
         new Ingredient(ingredient.name, ingredient.amount)
       )
     }
+
     this.hasSaved = true;
     this.timeOfLastSave = Date.now();
+    return newRecipe;
+  }
+
+  saveNewForm() {
+    const newRecipe = this.getNewRecipe();
+    this.recipesService.addRecipe(newRecipe);
+
+  }
+
+  updateSavedForm() {
+    const newRecipe = this.getNewRecipe();
     this.recipesService.updateRecipe(this.id, newRecipe);
   }
 
