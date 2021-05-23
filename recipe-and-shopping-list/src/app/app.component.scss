@@ -1,5 +1,6 @@
 $red: #d9534f;
 $blue: #337ab7;
+$green: #5cb85c;
 
 .cursor-pointer {
   cursor: pointer;
@@ -27,4 +28,11 @@ $blue: #337ab7;
 #ingredients {
   height: 72.5vh; 
   overflow: auto;
+}
+
+.has-not-saved{
+  color: $red;
+}
+.has-saved {
+  color: $green;
 }

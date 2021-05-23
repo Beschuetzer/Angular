@@ -1,17 +1,24 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { Form, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
+import { Ingredient } from 'src/app/models/ingredient.model';
+import { Recipe } from 'src/app/models/recipe.model';
 import { RecipesService } from '../recipes.service';
 
 @Component({
   selector: 'app-recipe-edit',
   templateUrl: './recipe-edit.component.html',
-  styleUrls: ['./recipe-edit.component.scss']
+  styleUrls: ['./recipe-edit.component.scss'],
 })
 export class RecipeEditComponent implements OnInit {
   public id: number;
   public editMode = false;
   public form: FormGroup;
+  public hasSaved = false;
+  private canSave = true;
+  private canSaveInterval = 2500;
+  private autoSaveTimeoutId;
+  private timeOfLastSave: number;
 
   get ingredientControls() {
     const ingredientsFormArray = this.form.get('ingredients') as FormArray;
@@ -22,6 +29,35 @@ export class RecipeEditComponent implements OnInit {
     private route: ActivatedRoute,
     private recipesService: RecipesService,
   ) { }
+
+  handleFormValueChange(e: Event){
+    if (this.autoSaveTimeoutId) clearTimeout(this.autoSaveTimeoutId);
+    if (!this.form.valid || this.canSave === false) {
+      this.hasSaved = false;
+      this.autoSaveTimeoutId = setTimeout(() => {
+        this.handleFormValueChange(e);
+      }, (Date.now() - this.timeOfLastSave));
+      return;
+    }
+
+    this.canSave = false;
+    setTimeout(() => {
+      this.canSave = true;
+    }, this.canSaveInterval)
+
+    const { name, description, imagePath, ingredients } = this.form.value;
+    const newRecipe = new Recipe(this.id, name, description, imagePath, []);
+    
+    for (let i = 0; i < ingredients.length; i++) {
+      const ingredient = ingredients[i];
+      newRecipe.ingredients.push(
+        new Ingredient(ingredient.name, ingredient.amount)
+      )
+    }
+    this.hasSaved = true;
+    this.timeOfLastSave = Date.now();
+    this.recipesService.updateRecipe(this.id, newRecipe);
+  }
 
   ngOnInit(): void {
     this.initializeForm();
@@ -46,6 +82,7 @@ export class RecipeEditComponent implements OnInit {
   onDeleteIngredient(index: number) {
     (this.form.get('ingredients') as FormArray).removeAt(index);
   }
+  
 
   onFormSubmit() {
     console.log(this.form);

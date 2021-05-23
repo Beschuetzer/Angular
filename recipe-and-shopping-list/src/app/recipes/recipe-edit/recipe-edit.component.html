@@ -4,11 +4,15 @@
     <form (ngSubmit)="onFormSubmit()" [formGroup]="form">
       <div class="row">
         <div class="col-xs-12">
-          <button 
-            class="btn btn-success"
-            [disabled]="!form.valid"
-          >Save</button>
-          <button class="btn btn-danger">Cancel</button>
+          <label 
+            *ngIf="hasSaved"          
+            class="help-block has-saved"
+          >Recipe Saved!</label>
+          <label 
+            *ngIf="!hasSaved"          
+            class="help-block has-not-saved"
+          >Recipe NOT Saved!</label>
+          <button class="btn btn-danger">Undo Changes</button>
         </div>
       </div>
       <div class="row">
@@ -20,6 +24,7 @@
                 class="form-control"
                 type="text" 
                 formControlName="name" 
+                (ngModelChange)="handleFormValueChange($event)"
               />
             </label>
           </div>
@@ -32,6 +37,7 @@
                 class="form-control"
                 type="text"
                 formControlName="imagePath"
+                (ngModelChange)="handleFormValueChange($event)"
               />
             </label>
           </div>
@@ -48,6 +54,7 @@
                 type="text"
                 formControlName="description"
                 rows="6"
+                (ngModelChange)="handleFormValueChange($event)"
               ></textarea>
             </label>
           </div>
@@ -86,6 +93,7 @@
                 type="text" 
                 class="form-control"
                 formControlName="name"
+                (ngModelChange)="handleFormValueChange($event)"
               />
             </div>
             <div class="col-xs-2">
@@ -94,6 +102,7 @@
                 min="1"
                 class="form-control" 
                 formControlName="amount"
+                (ngModelChange)="handleFormValueChange($event)"
               />
             </div>
             <div class="col-xs-2">
