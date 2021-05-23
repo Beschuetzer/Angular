@@ -11,7 +11,7 @@ import { Recipe } from '../../models/recipe.model';
 })
 export class RecipeListComponent implements OnInit, OnDestroy {
   public recipes: Recipe[];
-  private recipesServiceSubscription: Subscription;
+  private getNewRecipesSubscription: Subscription;
 
   constructor(
     private recipesService: RecipesService,
@@ -19,21 +19,25 @@ export class RecipeListComponent implements OnInit, OnDestroy {
     private route: ActivatedRoute,
   ) {}
 
+  handleNewClick() {
+    this.router.navigate(['new'], {relativeTo: this.route});
+  }
+
   ngOnInit(): void {
     this.recipes = this.recipesService.getRecipes();
-    this.recipesServiceSubscription = this.recipesService.updateRecipes.subscribe((recipes) => {
-      this.recipes = recipes;
-    })
+    this.subscribeToSubjects();
   }
 
   ngOnChanges() {
   }
 
   ngOnDestroy () {
-    this.recipesServiceSubscription.unsubscribe();
+    this.getNewRecipesSubscription.unsubscribe();
   }
 
-  handleNewClick() {
-    this.router.navigate(['new'], {relativeTo: this.route});
+  private subscribeToSubjects() {
+    this.getNewRecipesSubscription = this.recipesService.sendNewRecipesSubject.subscribe((recipes) => {
+      this.recipes = recipes;
+    });
   }
 }

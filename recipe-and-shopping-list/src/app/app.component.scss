@@ -6,7 +6,7 @@ $blue: #337ab7;
 }
 
 //styling invalid and touched inputs
-:is(input, select).ng-invalid.ng-touched{
+:is(input, select, textarea).ng-invalid.ng-touched{
   border: 1px solid $red;
 
   & + * .help-block{
@@ -15,11 +15,11 @@ $blue: #337ab7;
   }
 }
 
-:is(input, select).ng-valid.ng-touched{
+:is(input, select, textarea).ng-valid.ng-touched{
   border: 1px solid rgba($blue, .5);
 }
 
-:is(input, select).ng-invalid.ng-touched + * .help-block {
+:is(input, select, textarea).ng-invalid.ng-touched + * .help-block {
   color: $red;
   font-weight: 900;
 }

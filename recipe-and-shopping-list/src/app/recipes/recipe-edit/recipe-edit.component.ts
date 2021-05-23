@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormControl, FormGroup } from '@angular/forms';
+import { Form, FormArray, FormControl, FormGroup, Validators } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { RecipesService } from '../recipes.service';
 
@@ -14,9 +14,7 @@ export class RecipeEditComponent implements OnInit {
   public form: FormGroup;
 
   get ingredientControls() {
-    console.log('this.form =', this.form);
     const ingredientsFormArray = this.form.get('ingredients') as FormArray;
-    console.log('ingredientsFormArray =', ingredientsFormArray);
     return ingredientsFormArray.controls;
   }
 
@@ -34,8 +32,23 @@ export class RecipeEditComponent implements OnInit {
     });
   }
 
+  onAddIngredient() {
+    (this.form.get('ingredients') as FormArray).push(
+      new FormGroup({
+        name: new FormControl("", Validators.required),
+        amount: new FormControl(0, 
+          [Validators.required, Validators.min(1)],
+        ),
+      })
+    )
+  }
+
+  onDeleteIngredient(index: number) {
+    (this.form.get('ingredients') as FormArray).removeAt(index);
+  }
+
   onFormSubmit() {
-    console.log('form submit------------------------------------------------');
+    console.log(this.form);
   }
 
   private initializeForm() {
@@ -54,8 +67,12 @@ export class RecipeEditComponent implements OnInit {
         for (let ingredient of currentRecipe.ingredients) {
           recipeIngredients.push(
             new FormGroup({
-              name: new FormControl(ingredient.name),
-              amount: new FormControl(ingredient.amount),
+              name: new FormControl(ingredient.name, Validators.required),
+              amount: new FormControl(
+                ingredient.amount,
+                [Validators.required, Validators.min(1),
+                Validators.pattern(/^[1-9]+[0-9]*$/i)]
+              ),
             })
           );
         }
@@ -64,9 +81,18 @@ export class RecipeEditComponent implements OnInit {
     }
 
     this.form = new FormGroup({
-      name: new FormControl(name),
-      imagePath: new FormControl(imagePath),
-      description: new FormControl(description),
+      name: new FormControl(name, Validators.required),
+      imagePath: new FormControl(imagePath, 
+        [
+          Validators.required, Validators.pattern(/^http[s]*:\/\//i),
+        ],
+      ),
+      description: new FormControl(
+        description, 
+        [
+          Validators.required, Validators.minLength(1)
+        ],
+      ),
       ingredients: recipeIngredients,
     });
   }
