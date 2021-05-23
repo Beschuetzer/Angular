@@ -20,6 +20,7 @@ export class RecipeItemComponent implements OnInit {
   }
 
   handleClick(recipe: Recipe) {
-    this.router.navigate([recipe.id], {relativeTo: this.route})
+    const recipeIndex = this.recipesService.getRecipeIndex(recipe);
+    this.router.navigate([recipeIndex], {relativeTo: this.route})
   }
 }

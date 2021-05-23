@@ -49,9 +49,14 @@ export class RecipesService {
     return this.recipes.slice();
   }
 
+  getRecipeIndex(recipe: Recipe) {
+    return this.recipes.findIndex(rec => rec.name === recipe.name);
+  }
+
   getRecipesLength() {
     return this.recipes.length;
   }
+
 
   getUpdatedRecipes() {
     this.sendNewRecipes();
