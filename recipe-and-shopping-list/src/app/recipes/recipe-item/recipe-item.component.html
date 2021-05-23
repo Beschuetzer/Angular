@@ -2,20 +2,24 @@
   (click)="handleClick(recipe)"
   [routerLink]="recipe.id"
   [routerLinkActive]="'active'" 
-  class="list-group-item clearfix cursor-pointer" 
+  class="list-group-item clearfix cursor-pointer"
+  style="overflow-x: auto;" 
 >
-  <div class="pull-left">
-    <h4 class="list-group-item-heading">{{ recipe.name }}</h4>
-    <p class="list-group-item-text">{{ recipe.description }}</p>
+  <div class="row" style="display: flex; align-items: center;">
+    <div class="col-xs-8"  >
+      <h4 class="list-group-item-heading text-wrap">{{ recipe.name }}</h4>
+      <p class="list-group-item-text text-wrap">{{ recipe.description }}</p>
+    </div>
+    <div class="col-xs-4" style="padding-left: 0; display: flex; align-self: flex-start;">
+      <span class="pull-right">
+        <!-- #NOTE: this would work too -->
+        <!-- src="{{ recipe.imagePath }}"  -->
+        <img 
+          [src]="recipe.imagePath"
+          alt="{{ recipe.name }}" 
+          class="img-responsive" 
+        >
+      </span>
+    </div>
   </div>
-  <span class="pull-right">
-    <!-- #NOTE: this would work too -->
-    <!-- src="{{ recipe.imagePath }}"  -->
-    <img 
-      [src]="recipe.imagePath"
-      alt="{{ recipe.name }}" 
-      class="img-responsive" 
-      style='max-height: 50px;'
-    >
-  </span>
 </a>

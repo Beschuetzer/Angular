@@ -4,15 +4,19 @@
     <form (ngSubmit)="onFormSubmit()" [formGroup]="form">
       <div class="row">
         <div class="col-xs-12">
-          <label 
-            *ngIf="hasSaved"          
-            class="help-block has-saved"
-          >Recipe Saved!</label>
-          <label 
-            *ngIf="!hasSaved"          
-            class="help-block has-not-saved"
-          >Recipe NOT Saved!</label>
-          <button class="btn btn-danger">Undo Changes</button>
+          <label *ngIf="hasSaved" class="help-block has-saved"
+            >Recipe Saved!</label
+          >
+          <label *ngIf="!hasSaved" class="help-block has-not-saved"
+            >Recipe NOT Saved!</label
+          >
+          <button
+            (click)="onUndoFormChanges()"
+            type="button"
+            class="btn btn-danger"
+          >
+            Undo Changes
+          </button>
         </div>
       </div>
       <div class="row">
@@ -22,9 +26,9 @@
               Name
               <input
                 class="form-control"
-                type="text" 
-                formControlName="name" 
-                (ngModelChange)="handleFormValueChange($event)"
+                type="text"
+                formControlName="name"
+                (ngModelChange)="handleFormValueChange()"
               />
             </label>
           </div>
@@ -37,7 +41,7 @@
                 class="form-control"
                 type="text"
                 formControlName="imagePath"
-                (ngModelChange)="handleFormValueChange($event)"
+                (ngModelChange)="handleFormValueChange()"
               />
             </label>
           </div>
@@ -49,68 +53,71 @@
             <label for="" style="display: block">
               Description
               <textarea
-                style="resize: vertical; min-height: 130px;"
+                style="resize: vertical; min-height: 130px"
                 class="form-control"
                 type="text"
                 formControlName="description"
                 rows="6"
-                (ngModelChange)="handleFormValueChange($event)"
+                (ngModelChange)="handleFormValueChange()"
               ></textarea>
             </label>
           </div>
         </div>
         <div class="col-xs-6">
           <img
-            style="max-height: 150px; margin: 0 auto;"
+            style="max-height: 150px; margin: 0 auto"
             src="{{ form.controls.imagePath.value }}"
-            alt="Url Image"
+            alt="The Image Url you entered is invalid"
             class="img-responsive"
           />
         </div>
       </div>
       <div class="row">
         <div class="col-xs-10">
-            <label for="">
-              Ingredients
-            </label>            
-            <button 
+          <label for=""> Ingredients </label>
+          <button
             type="button"
-            style="margin-left: 5px;"
+            style="margin-left: 5px"
             class="btn btn-primary"
             (click)="onAddIngredient()"
-          >+</button>
+          >
+            +
+          </button>
         </div>
       </div>
       <div class="row">
         <div class="col-xs-12" formArrayName="ingredients">
-          <div 
-            style="margin-top: 5px;"
-            class="row" 
+          <div
+            style="margin-top: 5px"
+            class="row"
             *ngFor="let ingredientControl of ingredientControls; let i = index"
-            [formGroupName]="i">
+            [formGroupName]="i"
+          >
             <div class="col-xs-8">
-              <input 
-                type="text" 
+              <input
+                type="text"
                 class="form-control"
                 formControlName="name"
-                (ngModelChange)="handleFormValueChange($event)"
+                (ngModelChange)="handleFormValueChange()"
               />
             </div>
             <div class="col-xs-2">
-              <input 
-                type="number" 
+              <input
+                type="number"
                 min="1"
-                class="form-control" 
+                class="form-control"
                 formControlName="amount"
-                (ngModelChange)="handleFormValueChange($event)"
+                (ngModelChange)="handleFormValueChange()"
               />
             </div>
             <div class="col-xs-2">
-              <button 
+              <button
                 type="button"
                 class="btn btn-danger form-control"
                 (click)="onDeleteIngredient(i)"
-              >X</button>
+              >
+                X
+              </button>
             </div>
           </div>
         </div>

@@ -19,6 +19,7 @@ export class RecipeEditComponent implements OnInit {
   private canSaveInterval = 2500;
   private autoSaveTimeoutId;
   private timeOfLastSave: number;
+  private initialRecipeState: Recipe;
 
   get ingredientControls() {
     const ingredientsFormArray = this.form.get('ingredients') as FormArray;
@@ -30,12 +31,12 @@ export class RecipeEditComponent implements OnInit {
     private recipesService: RecipesService,
   ) { }
 
-  handleFormValueChange(e: Event){
+  handleFormValueChange(){
     if (this.autoSaveTimeoutId) clearTimeout(this.autoSaveTimeoutId);
     if (!this.form.valid || this.canSave === false) {
       this.hasSaved = false;
       this.autoSaveTimeoutId = setTimeout(() => {
-        this.handleFormValueChange(e);
+        this.handleFormValueChange();
       }, (Date.now() - this.timeOfLastSave));
       return;
     }
@@ -66,6 +67,7 @@ export class RecipeEditComponent implements OnInit {
       this.editMode = params.id ? true : false;
       this.initializeForm();
     });
+    this.initialRecipeState = this.recipesService.getRecipe(this.id);
   }
 
   onAddIngredient() {
@@ -81,11 +83,17 @@ export class RecipeEditComponent implements OnInit {
 
   onDeleteIngredient(index: number) {
     (this.form.get('ingredients') as FormArray).removeAt(index);
+    this.handleFormValueChange();
   }
   
 
   onFormSubmit() {
     console.log(this.form);
+  }
+
+  onUndoFormChanges() {
+    this.recipesService.updateRecipe(this.id, this.initialRecipeState);
+    this.initializeForm();
   }
 
   private initializeForm() {
