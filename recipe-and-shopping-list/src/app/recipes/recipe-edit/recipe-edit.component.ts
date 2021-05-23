@@ -64,7 +64,7 @@ export class RecipeEditComponent implements OnInit {
 
   getNewRecipe() {
     const { name, description, imagePath, ingredients } = this.form.value;
-    const newRecipe = new Recipe(this.id, name, description, imagePath, []);
+    const newRecipe = new Recipe(name, description, imagePath, []);
     
     for (let i = 0; i < ingredients.length; i++) {
       const ingredient = ingredients[i];
@@ -90,6 +90,7 @@ export class RecipeEditComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.id = this.route.snapshot.params.id;
     this.initializeForm();
     this.route.params.subscribe((params) => {
       this.id = params.id;
