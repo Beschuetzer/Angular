@@ -26,8 +26,14 @@
         <li appDropdownGlobal class='dropdown'>
           <a class='dropdown-toggle cursor-pointer'>Manage <span class="caret"></span></a>
           <ul class="dropdown-menu">
-            <li class=""><a class="cursor-pointer">Save Data</a></li>
-            <li class=""><a class="cursor-pointer">Load Data</a></li>
+            <li 
+              (click)="onSaveData()" 
+              class=""
+            ><a class="cursor-pointer">Save Data</a></li>
+            <li 
+              (click)="onLoadData()"
+              class=""
+            ><a class="cursor-pointer">Load Data</a></li>
           </ul>
         </li>
       </ul>

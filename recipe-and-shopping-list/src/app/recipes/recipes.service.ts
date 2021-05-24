@@ -1,7 +1,5 @@
-import { EventEmitter, Injectable, Output } from '@angular/core';
+import { Injectable} from '@angular/core';
 import { Subject } from 'rxjs';
-import { Ingredient } from '../models/ingredient.model';
-
 import { Recipe } from '../models/recipe.model';
 
 @Injectable({
@@ -12,26 +10,25 @@ export class RecipesService {
   public sendDeletedIndexSubject = new Subject<number>();
   private clickedRecipe: Recipe;
   private recipes: Recipe[] = [
-    new Recipe(
-      'Tasty Schnitzel',
-      "A super-tasty schnitzel - just awesome!",
-      'https://upload.wikimedia.org/wikipedia/commons/7/72/Schnitzel.JPG',
-      [new Ingredient('Meat', 1), new Ingredient('Frech Fries', 20)]
-    ),
-    new Recipe(
-      'Big Fat Burger',
-      "What else is there to say?",
-      'https://upload.wikimedia.org/wikipedia/commons/b/be/Burger_King_Angus_Bacon_%26_Cheese_Steak_Burger.jpg',
-      [new Ingredient('Buns', 2), new Ingredient('Meat', 3), new Ingredient('Ketchup', 5)]
-    ),
-    new Recipe(
-      'Another Juicy Burger',
-      "Very very tasy",
-      'https://upload.wikimedia.org/wikipedia/commons/b/be/Burger_King_Angus_Bacon_%26_Cheese_Steak_Burger.jpg',
-      [new Ingredient('Buns', 2), new Ingredient('Meat', 3), new Ingredient('Ketchup', 5)]
-    ),
+    // new Recipe(
+    //   'Tasty Schnitzel',
+    //   "A super-tasty schnitzel - just awesome!",
+    //   'https://upload.wikimedia.org/wikipedia/commons/7/72/Schnitzel.JPG',
+    //   [new Ingredient('Meat', 1), new Ingredient('Frech Fries', 20)]
+    // ),
+    // new Recipe(
+    //   'Big Fat Burger',
+    //   "What else is there to say?",
+    //   'https://upload.wikimedia.org/wikipedia/commons/b/be/Burger_King_Angus_Bacon_%26_Cheese_Steak_Burger.jpg',
+    //   [new Ingredient('Buns', 2), new Ingredient('Meat', 3), new Ingredient('Ketchup', 5)]
+    // ),
+    // new Recipe(
+    //   'Another Juicy Burger',
+    //   "Very very tasty",
+    //   'https://upload.wikimedia.org/wikipedia/commons/b/be/Burger_King_Angus_Bacon_%26_Cheese_Steak_Burger.jpg',
+    //   [new Ingredient('Buns', 2), new Ingredient('Meat', 3), new Ingredient('Ketchup', 5)]
+    // ),
   ];
-  updateRecipes = new Subject<Recipe[]>();
 
   constructor() {}
 
@@ -76,6 +73,11 @@ export class RecipesService {
   updateRecipe(index: number, newRecipe: Recipe) {
     this.recipes[index] = newRecipe;
     this.sendNewRecipes();
+  }
+
+  setRecipes(recipes: Recipe[]) {
+    this.recipes = recipes;
+    this.sendNewRecipesSubject.next(this.recipes.slice());
   }
 
   private sendNewRecipes() {
