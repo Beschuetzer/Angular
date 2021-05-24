@@ -1,36 +1,82 @@
-import { HttpClient } from "@angular/common/http";
-import { Injectable } from "@angular/core";
-import { Subject } from "rxjs";
-import { Post } from "./post.model";
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpEventType,
+  HttpHeaders,
+  HttpParams,
+} from '@angular/common/http';
+import { Injectable } from '@angular/core';
+import { Subject } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
+import { Post } from './post.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class PostsService {
   sendFetchedPosts = new Subject<Post[]>();
+  errorClearSubject = new Subject<HttpErrorResponse>();
 
-  constructor(
-    private http: HttpClient,
-  ) {}
+  constructor(private http: HttpClient) {}
 
   createAndStorePosts(postData) {
-    this.http.post('https://jsonplaceholder.typicode.com/posts', postData).subscribe(responseBodyData => {
-      console.log('responseBodyData =', responseBodyData);
-    });
+    const config = {
+      headers: new HttpHeaders({
+        test: 'test',
+      }),
+      observe: 'response',
+    };
+
+    this.http
+      .post(
+        'https://jsonplaceholder.typicode.com/posts',
+        postData,
+        config as any
+      )
+      .subscribe((responseBodyData) => {
+        console.log('responseBodyData =', responseBodyData);
+      });
   }
 
   fetchPosts() {
-    this.http.get<Post[]>('http://jsonplaceholder.typicode.com/posts')   
-    .subscribe((data) => {
-      this.sendFetchedPosts.next(data);
-    })
+    let params = new HttpParams();
+    params = params.append('someKey', 'someValue');
+    params = params.append('anotherKey', 'anotherValue');
+    //=> ?someKey=someValue&anotherKey=anotherValue
+
+    const config = {
+      headers: new HttpHeaders({
+        'custom-header': 'hello!',
+      }),
+      params, //<----adding params to config object
+    };
+
+    this.http
+      .get<Post[]>('http://jsonplaceholder.typicode.com/posts', config)
+      .subscribe(
+        (data) => {
+          this.sendFetchedPosts.next(data);
+        },
+        (error) => {
+          console.log('error =', error);
+        }
+      );
   }
 
   clearPosts() {
-    this.http.delete('https://jsonplaceholder.typicode.com/posts').subscribe(deleted => {
-      console.log('deleted =', deleted);
-    }, error => {
-      
-    })
+    const config = {
+      responseType: 'json', //<-- 'blob' (files) and 'text' 
+    };
+
+    this.http
+      .delete('https://jsonplaceholder.typicode.com/posts', config as any)
+      .subscribe(
+        (deleted) => {
+          console.log('deleted =', deleted);
+        },
+        (error) => {
+          this.errorClearSubject.next(error);
+        }
+      );
   }
 }
