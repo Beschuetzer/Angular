@@ -1,6 +1,8 @@
 import { Injectable} from '@angular/core';
 import { Subject } from 'rxjs';
-import { Recipe } from '../models/recipe.model';
+import { plainToClass } from 'class-transformer';
+import { Ingredient } from '../models/ingredient.model';
+import { Recipe } from "../models/recipe.model";
 
 @Injectable({
   providedIn: 'root'
@@ -73,6 +75,17 @@ export class RecipesService {
   updateRecipe(index: number, newRecipe: Recipe) {
     this.recipes[index] = newRecipe;
     this.sendNewRecipes();
+  }
+
+  transformRecipes(jsonRecipes: []) {
+    const instantiatedRecipes = plainToClass(Recipe, jsonRecipes);
+
+    for (let i = 0; i < instantiatedRecipes.length; i++) {
+      const recipe = instantiatedRecipes[i];
+      recipe.ingredients = plainToClass(Ingredient, recipe.ingredients);
+    }
+
+    return instantiatedRecipes;
   }
 
   setRecipes(recipes: Recipe[]) {

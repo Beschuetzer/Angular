@@ -1,5 +1,6 @@
-import { Component, Output, EventEmitter } from "@angular/core";
-import { LinkNames } from '../models/enums';
+import { Component } from "@angular/core";
+import { Recipe } from "../models/recipe.model";
+import { RecipesService } from "../recipes/recipes.service";
 import { DataStorageService } from "../shared/data-storage.service";
 
 @Component({
@@ -14,6 +15,7 @@ export class HeaderComponent {
   
   constructor(
     private dataStorageService: DataStorageService,
+    private recipesService: RecipesService,
   ) {}
   onSaveData() {
     console.log('saving------------------------------------------------');
@@ -22,7 +24,10 @@ export class HeaderComponent {
 
   onLoadData() {
     console.log('loading data------------------------------------------------');
-    this.dataStorageService.fetchRecipes();
+    this.dataStorageService.fetchRecipes().subscribe((jsonRecipes: []) => {
+      const instantiatedRecipes = this.recipesService.transformRecipes(jsonRecipes);
+      this.recipesService.setRecipes(instantiatedRecipes);
+    });;
   }
 }
 

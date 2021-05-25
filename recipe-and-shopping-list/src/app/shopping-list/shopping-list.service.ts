@@ -52,10 +52,10 @@ export class ShoppingListService {
             this.ingredients[foundIndex].amount += ingredient.amount;
           }
         }
-        else throw new Error('Invalid ingredient sent to ShoppingListComponent in addIngredients');;
+        else throw new Error('Invalid ingredient sent to ShoppingListComponent in addIngredients');
       }
     }
-    else throw new Error('No ingredients sent to ShoppingListComponent in addIngredients');;
+    else return
     this.sendUpdatedIngredients();
   }
 
