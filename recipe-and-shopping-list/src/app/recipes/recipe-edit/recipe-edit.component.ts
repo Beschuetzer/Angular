@@ -89,8 +89,9 @@ export class RecipeEditComponent implements OnInit {
     this.recipesService.updateRecipe(this.id, newRecipe);
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.id = this.route.snapshot.params.id;
+    if (!this.recipesService.getIsValidId(+this.id)) return this.router.navigate(['/recipes']);
     this.initializeForm();
     this.route.params.subscribe((params) => {
       this.id = params.id;

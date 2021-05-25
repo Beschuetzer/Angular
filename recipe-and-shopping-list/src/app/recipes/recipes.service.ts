@@ -39,6 +39,10 @@ export class RecipesService {
     this.sendNewRecipes();
   }
 
+  getIsValidId(id: number) {
+    return id >= 0 && id < this.getRecipesLength();
+  }
+
   //Getter returning a copy 
   getClickedRecipe() {
     return {...this.clickedRecipe};
