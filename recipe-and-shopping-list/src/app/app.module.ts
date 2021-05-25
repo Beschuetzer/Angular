@@ -17,7 +17,7 @@ import { DropdownGlobalDirective } from './directives/dropdown-global.directive'
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
 import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component'
 import { ErrorMessageComponent } from './shopping-list/error-message/error-message.component';
-import { AuthComponent } from './auth/auth/auth.component';
+import { AuthComponent } from './auth/auth.component';
 
 @NgModule({
   declarations: [
