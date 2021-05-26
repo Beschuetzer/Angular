@@ -1,16 +1,18 @@
-import { HttpClient, HttpErrorResponse, HttpHeaders, HttpParams, HttpRequest, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { throwError } from 'rxjs';
-import { catchError } from 'rxjs/operators';
+import { Subject, throwError } from 'rxjs';
+import { catchError, tap } from 'rxjs/operators';
 import {
   AuthLoginResponseData,
   AuthSignUpResponseData,
 } from '../models/auth-response.model';
+import { User } from '../models/user.model';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  userSubject = new Subject<User>();
   key = 'AIzaSyBEoUzSKmpOWxeVbfH09xe7kK7XCuLVmj8';
   baseUrl = 'https://identitytoolkit.googleapis.com/v1/accounts';
   signUpUrl = `${this.baseUrl}:signUp?key=${this.key}`;
@@ -32,7 +34,11 @@ export class AuthService {
 
     return this.http.post<AuthSignUpResponseData>(this.signUpUrl, body).pipe(
       catchError((errorResponse) => {
-       return this.handleError(email, errorResponse);
+        return this.handleError(email, errorResponse);
+      }),
+      tap((response) => {
+        const newUser = this.handleAuthentication(email, response.idToken, response.localId, +response.expiresIn)
+        this.userSubject.next(newUser);
       })
     );
   }
@@ -47,7 +53,24 @@ export class AuthService {
     return this.http.post<AuthLoginResponseData>(this.loginUrl, body).pipe(
       catchError((errorResponse) => {
         return this.handleError(email, errorResponse);
+      }),
+      tap((response) => {
+        const newUser = this.handleAuthentication(email, response.idToken, response.localId, +response.expiresIn)
+        this.userSubject.next(newUser);
       })
+    );
+  }
+
+  private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
+    const expirationDate = new Date(
+      Date.now() + +expiresIn * 1000
+    );
+    
+    return new User(
+      email,
+      userId,
+      token,
+      expirationDate
     );
   }
 
