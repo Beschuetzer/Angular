@@ -1,6 +1,7 @@
-import { HttpErrorResponse } from '@angular/common/http';
+import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { AuthSignUpResponseData } from '../models/auth-response.model';
 import { AuthService } from './auth.service';
 
 @Component({
@@ -10,8 +11,10 @@ import { AuthService } from './auth.service';
 })
 export class AuthComponent implements OnInit {
   isLoginMode = true;
+  isLoading = false;
   form: FormGroup;
-  error: HttpErrorResponse;
+  errorMessage: HttpErrorResponse;
+  successMessage: string;
 
   constructor(
     private authService:AuthService,
@@ -42,23 +45,31 @@ export class AuthComponent implements OnInit {
 
   onFormSubmit(){ 
     if (!this.form.valid) return;
+    this.isLoading = true;
 
     const { email, password } = this.form.value;
 
     if (!this.isLoginMode) {
       this.authService.signUp(email, password).subscribe(response => {
-        console.log('response =', response);
-        debugger
-      }, error => {
-        this.error = error;
-        console.log('error =', error);
+        this.successMessage = `Successfully registered a new account for '${response.email}!'`
+        this.errorMessage = null;
+      }, errorMessage => {
+        this.errorMessage = errorMessage;
+        this.successMessage = null;
       });
     } else {
-      //TODO: implement sign up
+
+      this.authService.login(email, password).subscribe(response => {
+        this.successMessage = `Successfully logged in as ${email}.`
+        this.errorMessage = null;
+      }, errorMessage => {
+        this.errorMessage = errorMessage;
+        this.successMessage = null;
+      })
     }
 
     this.form.reset();
-
+    this.isLoading = false;
   }
 
   onSwitchMode() {
