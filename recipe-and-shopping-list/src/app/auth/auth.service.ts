@@ -1,4 +1,4 @@
-import { HttpClient, HttpErrorResponse, HttpResponse } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, throwError } from 'rxjs';
@@ -8,6 +8,8 @@ import {
   AuthSignUpResponseData,
 } from '../models/auth-response.model';
 import { User } from '../models/user.model';
+import { plainToClass } from 'class-transformer';
+import { DataStorageService } from '../shared/data-storage.service';
 
 @Injectable({
   providedIn: 'root',
@@ -44,6 +46,30 @@ export class AuthService {
     );
   }
 
+  autoLogin() {
+    const userDataFromLocalStorage: {
+      email: string,
+      id: string,
+      _token: string,
+      _tokenExpirationDate: string,
+    } = JSON.parse(localStorage.getItem('userData'));
+    if (!userDataFromLocalStorage) return false;
+
+    const instantiatedUser = new User(
+      userDataFromLocalStorage.email,
+      userDataFromLocalStorage.id,
+      userDataFromLocalStorage._token,
+      new Date(userDataFromLocalStorage._tokenExpirationDate),
+    )
+
+    if (instantiatedUser.token) {
+      this.userSubject.next(instantiatedUser);
+      return true;
+    }
+
+    return false;
+  }
+
   login(email: string, password: string) {
     const body = {
       email,
@@ -64,6 +90,7 @@ export class AuthService {
   logout() {
     this.userSubject.next(null);
     this.router.navigate(['/auth']);
+    localStorage.removeItem('userData');
   }
 
   private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
