@@ -3,6 +3,7 @@ import { Form, FormArray, FormControl, FormGroup, Validators } from '@angular/fo
 import { ActivatedRoute, Router } from '@angular/router';
 import { Ingredient } from 'src/app/models/ingredient.model';
 import { Recipe } from 'src/app/models/recipe.model';
+import { DataStorageService } from 'src/app/shared/data-storage.service';
 import { RecipesService } from '../recipes.service';
 
 @Component({
@@ -30,6 +31,7 @@ export class RecipeEditComponent implements OnInit {
     private route: ActivatedRoute,
     private recipesService: RecipesService,
     private router: Router,
+    private dataStorageService: DataStorageService,
   ) { }
 
   checkCanHandleValueChange() {
@@ -60,6 +62,7 @@ export class RecipeEditComponent implements OnInit {
       this.saveNewForm();
       this.router.navigate(['/recipes', (this.recipesService.getRecipesLength() - 1), 'edit']);
     }
+    this.dataStorageService.storeAllRecipes();
   }
 
   getNewRecipe() {

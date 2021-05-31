@@ -79,6 +79,7 @@ export class AuthService {
     );
 
     this.userSubject.next(newUser);
+    localStorage.setItem('userData', JSON.stringify(newUser));
   }
 
   private handleError(email, errorResponse: HttpErrorResponse) {
