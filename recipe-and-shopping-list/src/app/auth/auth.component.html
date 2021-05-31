@@ -11,10 +11,15 @@
       class="col-xs-12 col-md-6 col-md-offset-3"
       [ngClass]="{'opacity-half': isLoading}"
     >
-      <h3 
+      <!-- <h3 
         *ngIf="errorMessage"
         class="alert alert-danger"
-      > {{ errorMessage }}</h3>
+      > {{ errorMessage }}</h3> -->
+      <app-alert 
+        (resetError)="handleResetError()"
+        [message]="errorMessage" 
+        *ngIf="errorMessage"
+      ></app-alert>
       <h3 
         *ngIf="successMessage"
         class="alert alert-success"

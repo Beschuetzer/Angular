@@ -26,6 +26,10 @@ export class AuthComponent implements OnInit {
     this.initializeForm();
   }
 
+  handleResetError() {
+    this.errorMessage = null;
+  }
+
   initializeForm() {
     this.form = new FormGroup({
       "email": new FormControl(
