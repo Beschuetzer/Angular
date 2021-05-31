@@ -35,6 +35,7 @@
       <ul class="nav navbar-nav navbar-right">
         <li
           *ngIf="isAuthenticated"
+          (click)="onLogout()"
         ><a style="cursor: pointer;">Logout</a></li>
         <li 
           appDropdownGlobal 

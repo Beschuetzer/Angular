@@ -1,8 +1,9 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Recipe } from '../models/recipe.model';
 import { RecipesService } from '../recipes/recipes.service';
-import { map, tap } from 'rxjs/operators';
+import { exhaustMap, map, take, tap } from 'rxjs/operators';
+import { AuthService } from '../auth/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,8 @@ export class DataStorageService {
 
   constructor(
     private http: HttpClient,
-    private recipesService: RecipesService
+    private recipesService: RecipesService,
+    private authService: AuthService
   ) {}
 
   storeAllRecipes() {
@@ -39,7 +41,8 @@ export class DataStorageService {
         //tap allows you to execute code in-line without modifying anything
         tap((jsonRecipes: []) => {
           //storing recipes in
-          const instantiatedRecipes = this.recipesService.transformRecipes(jsonRecipes);
+          const instantiatedRecipes =
+            this.recipesService.transformRecipes(jsonRecipes);
           this.recipesService.setRecipes(instantiatedRecipes);
         })
       );
