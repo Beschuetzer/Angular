@@ -20,6 +20,7 @@ export class AuthService {
   baseUrl = 'https://identitytoolkit.googleapis.com/v1/accounts';
   signUpUrl = `${this.baseUrl}:signUp?key=${this.key}`;
   loginUrl = `${this.baseUrl}:signInWithPassword?key=${this.key}`;
+  tokenExpirationTimer: any;
 
   constructor(
     private http: HttpClient,
@@ -64,6 +65,8 @@ export class AuthService {
 
     if (instantiatedUser.token) {
       this.userSubject.next(instantiatedUser);
+      const expirationDuration = new Date(userDataFromLocalStorage._tokenExpirationDate).getTime() - Date.now();
+      this.autoLogout(+expirationDuration);
       return true;
     }
 
@@ -88,14 +91,28 @@ export class AuthService {
   }
 
   logout() {
+    this.handleLogout();
+    localStorage.removeItem('userData');
+    if (this.tokenExpirationTimer) clearTimeout(this.tokenExpirationTimer);
+    this.tokenExpirationTimer = null;
+  }
+
+  autoLogout(expirationDuration: number) {
+    this.tokenExpirationTimer = setTimeout(() => {
+      
+
+    }, expirationDuration)
+  }
+
+  private handleLogout() {
     this.userSubject.next(null);
     this.router.navigate(['/auth']);
-    localStorage.removeItem('userData');
   }
 
   private handleAuthentication(email: string, userId: string, token: string, expiresIn: number) {
+    const expirationDuration = +expiresIn * 1000;
     const expirationDate = new Date(
-      Date.now() + +expiresIn * 1000
+      Date.now() + expirationDuration
     );
     
     const newUser = new User(
@@ -107,6 +124,7 @@ export class AuthService {
 
     this.userSubject.next(newUser);
     localStorage.setItem('userData', JSON.stringify(newUser));
+    this.autoLogout(expirationDuration);
   }
 
   private handleError(email, errorResponse: HttpErrorResponse) {
