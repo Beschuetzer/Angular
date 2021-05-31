@@ -24,8 +24,6 @@ export class AuthService {
     if (!email || !password)
       throw new Error('Invalid Email and/or password in AuthService.signUp()');
 
-    console.log('email =', email);
-    console.log('password =', password);
     const body = {
       email,
       password,
@@ -37,8 +35,7 @@ export class AuthService {
         return this.handleError(email, errorResponse);
       }),
       tap((response) => {
-        const newUser = this.handleAuthentication(email, response.idToken, response.localId, +response.expiresIn)
-        this.userSubject.next(newUser);
+        this.handleAuthentication(email, response.idToken, response.localId, +response.expiresIn)
       })
     );
   }
@@ -55,8 +52,7 @@ export class AuthService {
         return this.handleError(email, errorResponse);
       }),
       tap((response) => {
-        const newUser = this.handleAuthentication(email, response.idToken, response.localId, +response.expiresIn)
-        this.userSubject.next(newUser);
+        this.handleAuthentication(email, response.idToken, response.localId, +response.expiresIn)
       })
     );
   }
@@ -66,12 +62,14 @@ export class AuthService {
       Date.now() + +expiresIn * 1000
     );
     
-    return new User(
+    const newUser = new User(
       email,
       userId,
       token,
       expirationDate
     );
+
+    this.userSubject.next(newUser);
   }
 
   private handleError(email, errorResponse: HttpErrorResponse) {

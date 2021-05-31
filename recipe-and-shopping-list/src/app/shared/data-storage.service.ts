@@ -39,8 +39,7 @@ export class DataStorageService {
         //tap allows you to execute code in-line without modifying anything
         tap((jsonRecipes: []) => {
           //storing recipes in
-          const instantiatedRecipes =
-            this.recipesService.transformRecipes(jsonRecipes);
+          const instantiatedRecipes = this.recipesService.transformRecipes(jsonRecipes);
           this.recipesService.setRecipes(instantiatedRecipes);
         })
       );

@@ -1,6 +1,7 @@
 import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
 import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { AuthSignUpResponseData } from '../models/auth-response.model';
 import { AuthService } from './auth.service';
 
@@ -18,6 +19,7 @@ export class AuthComponent implements OnInit {
 
   constructor(
     private authService:AuthService,
+    private router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -53,6 +55,7 @@ export class AuthComponent implements OnInit {
       this.authService.signUp(email, password).subscribe(response => {
         this.successMessage = `Successfully registered a new account for '${response.email}!'`
         this.errorMessage = null;
+        this.router.navigate(['/recipes']);
       }, errorMessage => {
         this.errorMessage = errorMessage;
         this.successMessage = null;
@@ -62,6 +65,7 @@ export class AuthComponent implements OnInit {
       this.authService.login(email, password).subscribe(response => {
         this.successMessage = `Successfully logged in as ${email}.`
         this.errorMessage = null;
+        this.router.navigate(['/recipes']);
       }, errorMessage => {
         this.errorMessage = errorMessage;
         this.successMessage = null;
