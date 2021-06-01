@@ -9,6 +9,8 @@ import { RecipeEditComponent } from './recipe-edit/recipe-edit.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { RecipesRoutingModule } from './recipes-routing.module';
+import { DropdownGlobalDirective } from '../directives/dropdown-global.directive';
+import { DropdownDirective } from '../directives/dropdown.directive';
 
 @NgModule({
   declarations: [
@@ -25,13 +27,5 @@ import { RecipesRoutingModule } from './recipes-routing.module';
     ReactiveFormsModule,
     RecipesRoutingModule,
   ],
-  exports: [
-    RecipeListComponent,
-    RecipeItemComponent,
-    RecipeDetailComponent,
-    RecipesComponent,
-    RecipeStartComponent,
-    RecipeEditComponent,
-  ]
 })
 export class RecipesModule { }
