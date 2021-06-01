@@ -7,9 +7,9 @@ import { RecipeEditComponent } from './recipes/recipe-edit/recipe-edit.component
 import { RecipeStartComponent } from './recipes/recipe-start/recipe-start.component';
 import { RecipesResolverService } from './recipes/recipes-resolver.service';
 import { RecipesComponent } from './recipes/recipes.component';
+import { rootRoute } from './shared/constants';
 import { ShoppingListComponent } from './shopping-list/shopping-list.component';
 
-const rootRoute = 'recipes';
 
 const routes: Routes = [
   {path: '', redirectTo: `/${rootRoute}`, pathMatch: 'full'},
