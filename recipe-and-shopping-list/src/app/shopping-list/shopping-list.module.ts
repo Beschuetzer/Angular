@@ -13,9 +13,9 @@ import { ShoppingListRoutingModule } from './shopping-list-routing.module';
     ErrorMessageComponent,
   ],
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     ShoppingListRoutingModule,
+    CommonModule,
   ]
 })
 export class ShoppingListModule { }
