@@ -15,11 +15,12 @@
         *ngIf="errorMessage"
         class="alert alert-danger"
       > {{ errorMessage }}</h3> -->
-      <app-alert 
+      <!-- <app-alert 
         (resetError)="handleResetError()"
         [message]="errorMessage" 
         *ngIf="errorMessage"
-      ></app-alert>
+      ></app-alert> -->
+      <ng-template appPlaceholder></ng-template>
       <h3 
         *ngIf="successMessage"
         class="alert alert-success"

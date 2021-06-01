@@ -1,8 +1,10 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthSignUpResponseData } from '../models/auth-response.model';
+import { Subscription } from 'rxjs';
+import { PlaceholderDirective } from '../directives/placeholder.directive';
+import { AlertComponent } from '../shared/alert/alert.component';
 import { AuthService } from './auth.service';
 
 @Component({
@@ -10,20 +12,28 @@ import { AuthService } from './auth.service';
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.scss']
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
   isLoginMode = true;
   isLoading = false;
   form: FormGroup;
   errorMessage: HttpErrorResponse;
   successMessage: string;
+  @ViewChild(PlaceholderDirective) alertHost: PlaceholderDirective;
+
+  private closeSubscription: Subscription;
 
   constructor(
     private authService:AuthService,
     private router: Router,
+    private componentFactoryResolver: ComponentFactoryResolver,
   ) { }
 
   ngOnInit(): void {
     this.initializeForm();
+  }
+
+  ngOnDestroy() {
+    if (this.closeSubscription) this.closeSubscription.unsubscribe();
   }
 
   handleResetError() {
@@ -62,6 +72,7 @@ export class AuthComponent implements OnInit {
         this.router.navigate(['/recipes']);
       }, errorMessage => {
         this.errorMessage = errorMessage;
+        this.showErrorAlert(errorMessage);
         this.successMessage = null;
       });
     } else {
@@ -72,6 +83,7 @@ export class AuthComponent implements OnInit {
         this.router.navigate(['/recipes']);
       }, errorMessage => {
         this.errorMessage = errorMessage;
+        this.showErrorAlert(errorMessage);
         this.successMessage = null;
       })
     }
@@ -82,5 +94,19 @@ export class AuthComponent implements OnInit {
 
   onSwitchMode() {
     this.isLoginMode = !this.isLoginMode;
+  }
+
+  private showErrorAlert(errorMessage: string) {
+    const alertComponentFactory = this.componentFactoryResolver.resolveComponentFactory(AlertComponent);
+
+    const hostViewContainerRef = this.alertHost.viewContainerRef;
+    hostViewContainerRef.clear();
+    const componentRef = hostViewContainerRef.createComponent(alertComponentFactory);
+
+    componentRef.instance.message = errorMessage;
+    this.closeSubscription =  componentRef.instance.resetError.subscribe(error => {
+      this.closeSubscription.unsubscribe();
+      hostViewContainerRef.clear();
+    })
   }
 }
