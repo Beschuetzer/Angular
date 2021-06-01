@@ -20,6 +20,7 @@ export class RecipeListComponent implements OnInit, OnDestroy {
   ) {}
 
   handleNewClick() {
+    debugger
     this.router.navigate(['new'], {relativeTo: this.route});
   }
 
