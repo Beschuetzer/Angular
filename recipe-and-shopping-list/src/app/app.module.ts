@@ -7,7 +7,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './header/header.component';
 import { AuthIntercepterService } from './auth/auth-intercepter.service';
-import { AuthModule } from './auth/auth.module';
 import { SharedModule } from './shared/shared.module';
 
 @NgModule({
@@ -20,7 +19,6 @@ import { SharedModule } from './shared/shared.module';
     AppRoutingModule,
     ReactiveFormsModule,
     HttpClientModule,
-    AuthModule,
     SharedModule,
   ],
   providers: [
