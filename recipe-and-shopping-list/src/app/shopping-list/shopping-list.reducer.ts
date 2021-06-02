@@ -9,7 +9,7 @@ const INITIAL_STATE = {
   ],
 };
 
-export function shoppingListReducer(state = INITIAL_STATE, action: ShoppingListActions.addIngredient) {
+export function shoppingListReducer(state = INITIAL_STATE, action: ShoppingListActions.AddIngredient) {
   switch (action.type) {
     case ShoppingListActions.ADD_INGREDIENT:
       return {...state, ingredients: [...state.ingredients,action.payload]};

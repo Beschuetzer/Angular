@@ -3,6 +3,8 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Subscription } from 'rxjs';
 import { Ingredient } from 'src/app/models/ingredient.model';
 import { ShoppingListService } from '../shopping-list.service';
+import { Store } from '@ngrx/store';
+import * as ShoppingListActions from '../store/shopping-list.actions';
 
 @Component({
   selector: 'app-shopping-list-edit',
@@ -19,7 +21,11 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   clickedIngredient: Ingredient;
   amountMin = 1;
   
-  constructor(private shoppingListService: ShoppingListService) { }
+  constructor(
+    private shoppingListService: ShoppingListService,
+    private store: Store<{shoppingList: {ingredients: Ingredient[]}}>,
+
+  ) { }
 
   checkShouldResetForm(ingredient: Ingredient) {
     if (+this.amountField.nativeElement.value === ingredient.amount && this.nameField.nativeElement.value.toLowerCase() === ingredient.name.toLowerCase()) this.resetForm();
@@ -57,11 +63,14 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   onFormSubmit() {
     const { name, amount } = this.form.value;
     const newIngredient = new Ingredient(name, amount);
-    this.shoppingListService.addIngredient(newIngredient);
+
+    this.store.dispatch(new ShoppingListActions.AddIngredient(newIngredient));
+    
+    // this.shoppingListService.addIngredient(newIngredient);
     this.resetForm();
   }
 
-  onClickClearClick(e: Event) {
+  onClickClearClick(e: Event) {``
     this.resetForm();
   }
 
