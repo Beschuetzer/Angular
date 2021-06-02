@@ -17,6 +17,9 @@ export class AuthComponent implements OnInit {
   errorMessage: HttpErrorResponse;
   successMessage: string;
 
+  emailValue = 'test@test.com';
+  passwordValue = 'test123';
+
   constructor(
     private authService:AuthService,
     private router: Router,

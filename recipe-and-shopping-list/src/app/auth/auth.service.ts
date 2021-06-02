@@ -10,13 +10,14 @@ import {
 import { User } from '../models/user.model';
 import { plainToClass } from 'class-transformer';
 import { DataStorageService } from '../shared/data-storage.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   userSubject = new BehaviorSubject<User>(null);
-  key = 'AIzaSyBEoUzSKmpOWxeVbfH09xe7kK7XCuLVmj8';
+  key = environment.firebaseApiKey;
   baseUrl = 'https://identitytoolkit.googleapis.com/v1/accounts';
   signUpUrl = `${this.baseUrl}:signUp?key=${this.key}`;
   loginUrl = `${this.baseUrl}:signInWithPassword?key=${this.key}`;

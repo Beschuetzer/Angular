@@ -1,1 +1,9 @@
-<h3>Please Select a Recipe</h3>
+<h3
+  *ngIf="recipesLength > 0"
+>Please Select a Recipe</h3>
+<button 
+  (click)="onLoadRecipes()"
+  *ngIf="recipesLength === 0"
+  class="btn btn-primary"
+>Load Recipes</button>
+
