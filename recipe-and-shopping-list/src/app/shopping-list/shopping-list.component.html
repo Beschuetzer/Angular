@@ -11,7 +11,7 @@
 >
   <div 
     class="list-group"
-    *ngFor="let ingredient of ingredients"
+    *ngFor="let ingredient of (ingredients | async).ingredients;"
   >
     <div class="col-xs-12">
       <a 
