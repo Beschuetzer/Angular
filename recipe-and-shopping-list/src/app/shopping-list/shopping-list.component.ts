@@ -2,7 +2,8 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { Ingredient } from '../models/ingredient.model';
 import { ShoppingListService } from './shopping-list.service';
-import { Store } from '@ngrx/store'
+import { Store } from '@ngrx/store';
+import * as fromShoppingList from './store/shopping-list.reducer';
 
 @Component({
   selector: 'app-shopping-list',
@@ -10,12 +11,12 @@ import { Store } from '@ngrx/store'
   styleUrls: ['./shopping-list.component.scss']
 })
 export class ShoppingListComponent implements OnInit, OnDestroy {
-  ingredients: Observable<{ ingredients: Ingredient[] }>;
+  ingredients: Observable<{ ingredients: Ingredient[]}>;
   // private updateIngredientsSubscription: Subscription;
 
   constructor(
     private shoppingListService: ShoppingListService,
-    private store: Store<{shoppingList: {ingredients: Ingredient[]}}>,
+    private store: Store<fromShoppingList.AppState>,
     ) {}
 
   ngOnInit(): void {
@@ -35,7 +36,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   onDeleteItemClick(ingredient: Ingredient) {
     this.shoppingListService.deleteIngredient(ingredient.name);
-    
+
     this.shoppingListService.sendCheckShouldClearAfterDelete(ingredient);
   }
 }
