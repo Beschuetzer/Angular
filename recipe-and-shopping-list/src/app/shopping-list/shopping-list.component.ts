@@ -35,6 +35,7 @@ export class ShoppingListComponent implements OnInit, OnDestroy {
 
   onDeleteItemClick(ingredient: Ingredient) {
     this.shoppingListService.deleteIngredient(ingredient.name);
+    
     this.shoppingListService.sendCheckShouldClearAfterDelete(ingredient);
   }
 }

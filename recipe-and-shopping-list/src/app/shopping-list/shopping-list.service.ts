@@ -1,6 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Ingredient } from '../models/ingredient.model';
+import { Store } from '@ngrx/store';
+import * as ShoppingListActions from './store/shopping-list.actions';
+
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +20,10 @@ export class ShoppingListService {
     new Ingredient('Apples', 5),
     new Ingredient('Oranges', 10),
   ];
-  constructor() { }
+
+  constructor(
+    private store: Store<{ ingredients: Ingredient[]}>,
+  ) {}
 
   getIngredients() {
     return this.ingredients.slice();
@@ -27,11 +33,12 @@ export class ShoppingListService {
     if (ingredient instanceof Ingredient) {
       const ingredientIndex = this.getIngredientIndex(ingredient);
       if (ingredientIndex !== -1) {
-        return this.ingredients[ingredientIndex].amount = ingredient.amount;
+        this.store.dispatch(new ShoppingListActions.DeleteIngredient(ingredientIndex));
+        return this.store.dispatch(new ShoppingListActions.AddIngredient(ingredient));
       }
 
-      this.ingredients.push(ingredient);
-      this.sendUpdatedIngredients();
+      // this.ingredients.push(ingredient);
+      this.store.dispatch(new ShoppingListActions.AddIngredients([ingredient]));
     }
     else throw new Error('Invalid new ingredient in ShoppingListComponent in addIngredient');
   }
@@ -45,7 +52,7 @@ export class ShoppingListService {
           const foundIndex = this.getIngredientIndex(ingredient);
           if (foundIndex == -1) {
             //New Ingredient
-            this.ingredients.push(ingredient);
+            this.store.dispatch(new ShoppingListActions.AddIngredient(ingredient));
           }
           else {
             //Already Present
@@ -67,7 +74,9 @@ export class ShoppingListService {
   deleteIngredient(name: string) {
     const indexOfIngredient = this.ingredients.findIndex(ingredient => ingredient.name?.toLowerCase() === name?.toLowerCase());
     if (indexOfIngredient !== -1) {
-      this.ingredients.splice(indexOfIngredient, 1);
+      this.store.dispatch(
+        new ShoppingListActions.DeleteIngredient(indexOfIngredient)
+      );
       this.sendUpdatedIngredients();
     }
     else alert(`${name} is not in the ingredient list.  You can add it though.`)
