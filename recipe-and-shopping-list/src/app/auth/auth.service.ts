@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 import { throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import {
-  AuthLoginResponseData,
   AuthSignUpResponseData,
 } from '../models/auth-response.model';
 import { User } from '../models/user.model';
@@ -35,7 +34,7 @@ export class AuthService {
       returnSecureToken: true,
     };
 
-    return this.http.post<AuthSignUpResponseData>(this.signUpUrl, body).pipe(
+    return this.http.post<AuthSignUpResponseData>('', body).pipe(
       catchError((errorResponse) => {
         return this.handleError(email, errorResponse);
       }),
@@ -81,25 +80,25 @@ export class AuthService {
   }
 
   login(email: string, password: string) {
-    const body = {
-      email,
-      password,
-      returnSecureToken: true,
-    };
+    // const body = {
+    //   email,
+    //   password,
+    //   returnSecureToken: true,
+    // };
 
-    return this.http.post<AuthLoginResponseData>(this.loginUrl, body).pipe(
-      catchError((errorResponse) => {
-        return this.handleError(email, errorResponse);
-      }),
-      tap((response) => {
-        this.handleAuthentication(
-          email,
-          response.idToken,
-          response.localId,
-          +response.expiresIn
-        );
-      })
-    );
+    // return this.http.post<AuthLoginResponseData>(this.loginUrl, body).pipe(
+    //   catchError((errorResponse) => {
+    //     return this.handleError(email, errorResponse);
+    //   }),
+    //   tap((response) => {
+    //     this.handleAuthentication(
+    //       email,
+    //       response.idToken,
+    //       response.localId,
+    //       +response.expiresIn
+    //     );
+    //   })
+    // );
   }
 
   logout() {

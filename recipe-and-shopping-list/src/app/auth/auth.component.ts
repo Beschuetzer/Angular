@@ -1,21 +1,25 @@
-import { HttpErrorResponse, HttpResponse } from '@angular/common/http';
-import { Component, OnInit } from '@angular/core';
+import { HttpErrorResponse } from '@angular/common/http';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthSignUpResponseData } from '../models/auth-response.model';
+import { Store } from '@ngrx/store';
+import { Subscription } from 'rxjs';
+import { AppState } from '../store/app.reducer';
 import { AuthService } from './auth.service';
+import * as AuthActions from './store/auth.actions';
 
 @Component({
   selector: 'app-auth',
   templateUrl: './auth.component.html',
   styleUrls: ['./auth.component.scss']
 })
-export class AuthComponent implements OnInit {
+export class AuthComponent implements OnInit, OnDestroy {
   isLoginMode = true;
   isLoading = false;
   form: FormGroup;
-  errorMessage: HttpErrorResponse;
+  errorMessage: string;
   successMessage: string;
+  authSub: Subscription;
 
   emailValue = 'test@test.com';
   passwordValue = 'test123';
@@ -23,10 +27,19 @@ export class AuthComponent implements OnInit {
   constructor(
     private authService:AuthService,
     private router: Router,
+    private store: Store<AppState>,
   ) { }
 
   ngOnInit(): void {
     this.initializeForm();
+    this.authSub = this.store.select('auth').subscribe(authState => {
+      this.isLoading = authState.loading;
+      this.errorMessage = authState.authError;
+    })
+  }
+
+  ngOnDestroy() {
+    this.authSub.unsubscribe();
   }
 
   handleResetError() {
@@ -68,17 +81,12 @@ export class AuthComponent implements OnInit {
         this.successMessage = null;
       });
     } else {
-
-      this.authService.login(email, password).subscribe(response => {
-        this.successMessage = `Successfully logged in as ${email}.`
-        this.errorMessage = null;
-        this.router.navigate(['/recipes']);
-      }, errorMessage => {
-        this.errorMessage = errorMessage;
-        this.successMessage = null;
-      })
+      this.store.dispatch(
+        new AuthActions.LoginStart({
+          email, password
+        })
+      )
     }
-
     this.form.reset();
     this.isLoading = false;
   }
