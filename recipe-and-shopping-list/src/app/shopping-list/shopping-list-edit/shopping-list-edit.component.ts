@@ -4,8 +4,7 @@ import { Subscription } from 'rxjs';
 import { Ingredient } from 'src/app/models/ingredient.model';
 import { ShoppingListService } from '../shopping-list.service';
 import { Store } from '@ngrx/store';
-import * as ShoppingListActions from '../store/shopping-list.actions';
-import * as fromShoppingList from '../store/shopping-list.reducer';
+import * as fromApp from '../../store/app.reducer';
 
 @Component({
   selector: 'app-shopping-list-edit',
@@ -24,7 +23,7 @@ export class ShoppingListEditComponent implements OnInit, OnDestroy {
   
   constructor(
     private shoppingListService: ShoppingListService,
-    private store: Store<fromShoppingList.AppState>,
+    private store: Store<fromApp.AppState>,
   ) { }
 
   checkShouldResetForm(ingredient: Ingredient) {
