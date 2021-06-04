@@ -1,14 +1,13 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, throwError } from 'rxjs';
+import { throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import {
   AuthLoginResponseData,
   AuthSignUpResponseData,
 } from '../models/auth-response.model';
 import { User } from '../models/user.model';
-import { environment } from 'src/environments/environment';
 import { Store } from '@ngrx/store';
 import { AppState } from '../store/app.reducer';
 import * as AuthActions from './store/auth.actions';
@@ -17,10 +16,7 @@ import * as AuthActions from './store/auth.actions';
   providedIn: 'root',
 })
 export class AuthService {
-  key = environment.firebaseApiKey;
-  baseUrl = 'https://identitytoolkit.googleapis.com/v1/accounts';
-  signUpUrl = `${this.baseUrl}:signUp?key=${this.key}`;
-  loginUrl = `${this.baseUrl}:signInWithPassword?key=${this.key}`;
+ 
   tokenExpirationTimer: any;
 
   constructor(
