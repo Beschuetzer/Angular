@@ -22,7 +22,7 @@ export class RecipeStartComponent implements OnInit, OnDestroy {
     this.recipesLength = this.recipesService.getRecipesLength();
   }
   ngOnDestroy () {
-    this.recipesSub.unsubscribe();
+    if(this.recipesSub) this.recipesSub.unsubscribe();
   }
 
   onLoadRecipes() {

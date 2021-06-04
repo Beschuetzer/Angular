@@ -9,8 +9,10 @@ import {
   RouterStateSnapshot,
   UrlTree,
 } from '@angular/router';
+import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { map, take, tap } from 'rxjs/operators';
+import { map, take } from 'rxjs/operators';
+import { AppState } from '../store/app.reducer';
 import { AuthService } from './auth.service';
 
 export type CanActivateOutputTypes =
@@ -23,16 +25,18 @@ export type CanActivateOutputTypes =
   providedIn: 'root',
 })
 export class AuthGuardService implements CanActivate, CanActivateChild {
-  constructor(private authService: AuthService, private router: Router) {}
+
+    constructor(private router: Router, private store: Store<AppState>) {}
 
   canActivate(
     route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot
+    state: RouterStateSnapshot,
   ): CanActivateOutputTypes {
     //userSubject is a BehaviorSubject initialized to be null
     //this returns the truthiness of the observable at the time of calling this function (no subscribing necessary)
-    return this.authService.userSubject.pipe(
+    return this.store.select('auth').pipe(
       take(1),
+      map(authState => authState.user),
       map((user) => {
         const isAuth = !!user;
         if (isAuth) return true;
