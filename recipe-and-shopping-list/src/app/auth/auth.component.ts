@@ -20,6 +20,7 @@ export class AuthComponent implements OnInit, OnDestroy {
   errorMessage: string;
   successMessage: string;
   authSub: Subscription;
+  storeSub: Subscription;
 
   emailValue = 'test@test.com';
   passwordValue = 'test123';
@@ -33,6 +34,7 @@ export class AuthComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.initializeForm();
     this.authSub = this.store.select('auth').subscribe(authState => {
+      console.log('this.errorMessage =', this.errorMessage);
       this.isLoading = authState.loading;
       this.errorMessage = authState.authError;
     })
@@ -43,7 +45,9 @@ export class AuthComponent implements OnInit, OnDestroy {
   }
 
   handleResetError() {
-    this.errorMessage = null;
+    this.store.dispatch(
+      new AuthActions.ClearError()
+    )
   }
 
   initializeForm() {

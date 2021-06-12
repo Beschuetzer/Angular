@@ -1,7 +1,10 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Actions, ofType, createEffect, Effect } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
-import { AuthLoginResponseData, AuthSignUpResponseData } from 'src/app/models/auth-response.model';
+import {
+  AuthLoginResponseData,
+  AuthSignUpResponseData,
+} from 'src/app/models/auth-response.model';
 import * as AuthActions from './auth.actions';
 import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
@@ -13,17 +16,20 @@ const BASE_URL = 'https://identitytoolkit.googleapis.com/v1/accounts';
 const SIGN_UP_URL = `${BASE_URL}:signUp?key=${KEY}`;
 const LOGIN_URL = `${BASE_URL}:signInWithPassword?key=${KEY}`;
 
-const handleAuthentication = (expiresIn: number, email: string, userId: string, token: string) => {
-  const expirationDate = new Date(
-    new Date().getTime() + expiresIn * 1000
-  );
+const handleAuthentication = (
+  expiresIn: number,
+  email: string,
+  userId: string,
+  token: string
+) => {
+  const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
   return new AuthActions.AuthenticateSuccess({
     email,
     userId,
     token,
     expirationDate,
-  })
-}
+  });
+};
 
 const handleError = (errorResponse: HttpErrorResponse) => {
   let errorMessage = 'An unknown error occurred';
@@ -46,7 +52,7 @@ const handleError = (errorResponse: HttpErrorResponse) => {
       errorMessage = defaultMessage;
   }
   return of(new AuthActions.AuthenticateFail(errorMessage));
-}
+};
 
 @Injectable()
 export class AuthEffects {
@@ -54,25 +60,27 @@ export class AuthEffects {
   authSignUp$ = this.actions$.pipe(
     ofType(AuthActions.SIGN_UP_START),
     switchMap((signUpAction: AuthActions.SignUpStart) => {
-      return this.http.post<AuthSignUpResponseData>(SIGN_UP_URL, {
-        email: signUpAction.payload.email,
-        password: signUpAction.payload.password,
-        returnSecureToken: true,
-      }).pipe(
-        map(resData => {
-          return handleAuthentication(
-            +resData.expiresIn, 
-            resData.email,
-            resData.idToken,
-            resData.localId,
-          )
-        }),
-        catchError((errorResponse: HttpErrorResponse) => {
-          return handleError(errorResponse);
+      return this.http
+        .post<AuthSignUpResponseData>(SIGN_UP_URL, {
+          email: signUpAction.payload.email,
+          password: signUpAction.payload.password,
+          returnSecureToken: true,
         })
-      )
+        .pipe(
+          map((resData) => {
+            return handleAuthentication(
+              +resData.expiresIn,
+              resData.email,
+              resData.idToken,
+              resData.localId
+            );
+          }),
+          catchError((errorResponse: HttpErrorResponse) => {
+            return handleError(errorResponse);
+          })
+        );
     })
-  )
+  );
 
   @Effect()
   authLogin$ = this.actions$.pipe(
@@ -88,11 +96,11 @@ export class AuthEffects {
         .pipe(
           map((resData) => {
             return handleAuthentication(
-              +resData.expiresIn, 
+              +resData.expiresIn,
               resData.email,
               resData.idToken,
-              resData.localId,
-            )
+              resData.localId
+            );
           }),
           //Note: have to handle errors for effects differently than in services, namely by piping and catching error on the innermost observable
           catchError((errorResponse: HttpErrorResponse) => {
@@ -105,10 +113,13 @@ export class AuthEffects {
     })
   );
 
-  @Effect({dispatch: false})
-  authSuccess = this.actions$.pipe(ofType(AuthActions.AUTHENTICATE_SUCCESS), tap(() => {
-    this.router.navigate(['/'])
-  }));
+  @Effect({ dispatch: false })
+  authRedirect = this.actions$.pipe(
+    ofType(AuthActions.AUTHENTICATE_SUCCESS, AuthActions.LOGOUT),
+    tap(() => {
+      this.router.navigate(['/']);
+    })
+  );
 
   constructor(
     //actions$ is a stream of actions
