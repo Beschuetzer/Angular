@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import { AuthService } from './auth/auth.service';
-import { DataStorageService } from './shared/data-storage.service';
+import { AppService } from './app.service';
 
 @Component({
   selector: 'app-root',
@@ -10,12 +9,10 @@ import { DataStorageService } from './shared/data-storage.service';
 })
 export class AppComponent implements OnInit{
   constructor(
-    private authService: AuthService,
-    private dataStorageService: DataStorageService,
+    private appService: AppService,
   ) {}
   
   ngOnInit() {
-    const isLoginSuccessful = this.authService.autoLogin();
-    if (isLoginSuccessful) this.dataStorageService.fetchRecipes().subscribe(data => {});
+    this.appService.loginViaLocalStorage();
   }
 }

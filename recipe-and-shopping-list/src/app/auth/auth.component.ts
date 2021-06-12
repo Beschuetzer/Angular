@@ -1,4 +1,3 @@
-import { HttpErrorResponse } from '@angular/common/http';
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -82,6 +81,7 @@ export class AuthComponent implements OnInit, OnDestroy {
         })
       )
     } else {
+      console.log('dispatch LoginStart------------------------------------------------');
       this.store.dispatch(
         new AuthActions.LoginStart({
           email, password

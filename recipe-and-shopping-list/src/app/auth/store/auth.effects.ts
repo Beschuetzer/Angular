@@ -1,5 +1,5 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Actions, ofType, createEffect, Effect } from '@ngrx/effects';
+import { Actions, ofType, Effect } from '@ngrx/effects';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
 import {
   AuthLoginResponseData,
@@ -10,6 +10,9 @@ import { environment } from 'src/environments/environment';
 import { of } from 'rxjs';
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
+import { User } from 'src/app/models/user.model';
+import { AuthService } from '../auth.service';
+import { DataStorageService } from 'src/app/shared/data-storage.service';
 
 const KEY = environment.firebaseApiKey;
 const BASE_URL = 'https://identitytoolkit.googleapis.com/v1/accounts';
@@ -20,9 +23,16 @@ const handleAuthentication = (
   expiresIn: number,
   email: string,
   userId: string,
-  token: string
+  token: string,
+  authService: AuthService,
 ) => {
+  authService.setLogoutTimer(+expiresIn * 1000)
+
+
   const expirationDate = new Date(new Date().getTime() + expiresIn * 1000);
+  const newUser = new User(email, userId, token, expirationDate);
+  localStorage.setItem('userData', JSON.stringify(newUser));
+
   return new AuthActions.AuthenticateSuccess({
     email,
     userId,
@@ -56,6 +66,58 @@ const handleError = (errorResponse: HttpErrorResponse) => {
 
 @Injectable()
 export class AuthEffects {
+  constructor(
+    //actions$ is a stream of actions
+    private actions$: Actions,
+    private http: HttpClient,
+    private router: Router,
+    private authService: AuthService,
+    private dataStorageService: DataStorageService,
+  ) {}
+ 
+  @Effect({dispatch: false})
+  authLogout$ = this.actions$.pipe(
+    ofType(AuthActions.LOGOUT),
+    tap(() => {
+      this.authService.clearLogoutTimer();
+      localStorage.removeItem('userData');
+      this.router.navigate(['/auth']);
+    })
+  )
+
+  @Effect()
+  autoLogin$ = this.actions$.pipe(
+    ofType(AuthActions.AUTO_LOGIN),
+    map(() => {
+      const userDataFromLocalStorage: {
+        email: string;
+        id: string;
+        _token: string;
+        _tokenExpirationDate: string;
+      } = JSON.parse(localStorage.getItem('userData'));
+      if (!userDataFromLocalStorage) return false;
+  
+      if (userDataFromLocalStorage._token) {
+        const expirationDuration =
+          new Date(userDataFromLocalStorage._tokenExpirationDate).getTime() -
+          Date.now();
+
+        this.authService.setLogoutTimer(expirationDuration);
+
+        return new AuthActions.AuthenticateSuccess({
+          email: userDataFromLocalStorage.email,
+          userId: userDataFromLocalStorage.id,
+          token: userDataFromLocalStorage._token,
+          expirationDate: new Date(
+            userDataFromLocalStorage._tokenExpirationDate
+          ),
+        })
+        
+      }
+      return { type: "DUMMY"}
+    })
+  )
+
   @Effect()
   authSignUp$ = this.actions$.pipe(
     ofType(AuthActions.SIGN_UP_START),
@@ -72,7 +134,8 @@ export class AuthEffects {
               +resData.expiresIn,
               resData.email,
               resData.idToken,
-              resData.localId
+              resData.localId,
+              this.authService,
             );
           }),
           catchError((errorResponse: HttpErrorResponse) => {
@@ -83,9 +146,10 @@ export class AuthEffects {
   );
 
   @Effect()
-  authLogin$ = this.actions$.pipe(
+  authLoginStart$ = this.actions$.pipe(
     //ofType allows you to specify which actions trigger this effect (separate actions by a comma if multiple)
     ofType(AuthActions.LOGIN_START),
+    tap(() => {console.log('starting login------------------------------------------------')}),
     switchMap((authData: AuthActions.LoginStart) => {
       return this.http
         .post<AuthLoginResponseData>(LOGIN_URL, {
@@ -95,11 +159,13 @@ export class AuthEffects {
         })
         .pipe(
           map((resData) => {
+            ;
             return handleAuthentication(
               +resData.expiresIn,
               resData.email,
               resData.idToken,
-              resData.localId
+              resData.localId,
+              this.authService,
             );
           }),
           //Note: have to handle errors for effects differently than in services, namely by piping and catching error on the innermost observable
@@ -113,18 +179,15 @@ export class AuthEffects {
     })
   );
 
+  //add {dispatch: false} if no action is returned
   @Effect({ dispatch: false })
   authRedirect = this.actions$.pipe(
     ofType(AuthActions.AUTHENTICATE_SUCCESS, AuthActions.LOGOUT),
     tap(() => {
+      console.log('re-routing------------------------------------------------');
       this.router.navigate(['/']);
+      this.dataStorageService.fetchRecipes().subscribe(data => {});
     })
   );
 
-  constructor(
-    //actions$ is a stream of actions
-    private actions$: Actions,
-    private http: HttpClient,
-    private router: Router
-  ) {}
 }
