@@ -60,7 +60,7 @@ export class AuthService {
 
     if (userDataFromLocalStorage._token) {
       this.store.dispatch(
-        new AuthActions.Login({
+        new AuthActions.AuthenticateSuccess({
           email: userDataFromLocalStorage.email,
           userId: userDataFromLocalStorage.id,
           token: userDataFromLocalStorage._token,
@@ -131,7 +131,7 @@ export class AuthService {
     const newUser = new User(email, userId, token, expirationDate);
 
     this.store.dispatch(
-      new AuthActions.Login({
+      new AuthActions.AuthenticateSuccess({
         email,
         userId,
         token,

@@ -18,7 +18,7 @@ export function authReducer(
   action: AuthActions.AuthActions
 ) {
   switch (action.type) {
-    case AuthActions.LOGIN:
+    case AuthActions.AUTHENTICATE_SUCCESS:
       return {
         ...state,
         user: new User(
@@ -42,7 +42,7 @@ export function authReducer(
         loading: true,
         authError: null,
       }
-    case AuthActions.LOGIN_FAIL:
+    case AuthActions.AUTHENTICATE_FAIL:
       return {
         ...state, 
         user: null,

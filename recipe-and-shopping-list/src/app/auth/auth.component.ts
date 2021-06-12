@@ -72,14 +72,11 @@ export class AuthComponent implements OnInit, OnDestroy {
     const { email, password } = this.form.value;
 
     if (!this.isLoginMode) {
-      this.authService.signUp(email, password).subscribe(response => {
-        this.successMessage = `Successfully registered a new account for '${response.email}!'`
-        this.errorMessage = null;
-        this.router.navigate(['/recipes']);
-      }, errorMessage => {
-        this.errorMessage = errorMessage;
-        this.successMessage = null;
-      });
+      this.store.dispatch(
+        new AuthActions.SignUpStart({
+          email, password
+        })
+      )
     } else {
       this.store.dispatch(
         new AuthActions.LoginStart({
