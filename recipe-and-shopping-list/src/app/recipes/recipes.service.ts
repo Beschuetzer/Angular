@@ -67,6 +67,11 @@ export class RecipesService {
   }
 
   getRecipesLength() {
+    if (!this.recipes || this.recipes.length <= 0) {
+      this.store.select('recipes').subscribe(recipeState => {
+        this.recipes = recipeState.recipes;
+      })
+    }
     return this.recipes.length;
   }
 
