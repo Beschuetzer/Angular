@@ -7,17 +7,17 @@ const routes: Routes = [
   {
     path: rootRoute,
     loadChildren: () =>
-      import('./recipes/recipes.module').then((m) => m.RecipesModule),
+      import('./recipes/recipes.module').then((importedModule) => importedModule.RecipesModule),
   },
   {
     path: 'shopping-list',
     loadChildren: () =>
-      import('./shopping-list/shopping-list.module').then((m) => m.ShoppingListModule),
+      import('./shopping-list/shopping-list.module').then((importedModule) => importedModule.ShoppingListModule),
   },
   {
     path: 'auth',
     loadChildren: () =>
-      import('./auth/auth.module').then((m) => m.AuthModule),
+      import('./auth/auth.module').then((importedModule) => importedModule.AuthModule),
   },
   // {path: '**', redirectTo: `/${rootRoute}`},
 ];

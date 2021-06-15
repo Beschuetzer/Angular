@@ -8,7 +8,6 @@ import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { exhaustMap, take, map } from 'rxjs/operators';
 import { AppState } from '../store/app.reducer';
-import { AuthService } from './auth.service';
 
 @Injectable({
   providedIn: 'root',
