@@ -7,12 +7,14 @@ import { AppState } from '../store/app.reducer';
 import { Store } from '@ngrx/store';
 import * as RecipeActions from '../recipes/store/recipes.actions';
 
+export const firebaseProjectUrl =
+    'https://recipe-shopping-list-7f4e4-default-rtdb.firebaseio.com';
+
 @Injectable({
   providedIn: 'root',
 })
 export class DataStorageService {
-  private firebaseProjectUrl =
-    'https://recipe-shopping-list-7f4e4-default-rtdb.firebaseio.com';
+  
 
   constructor(
     private http: HttpClient,
@@ -23,7 +25,7 @@ export class DataStorageService {
   storeAllRecipes() {
     const recipes = this.recipesService.getRecipes();
     this.http
-      .put(`${this.firebaseProjectUrl}/recipes.json`, recipes)
+      .put(`${firebaseProjectUrl}/recipes.json`, recipes)
       .subscribe((response) => {
         console.log('saved response =', response);
       });
@@ -31,7 +33,7 @@ export class DataStorageService {
 
   fetchRecipes() {
     return this.http
-      .get<Recipe[]>(`${this.firebaseProjectUrl}/recipes.json`)
+      .get<Recipe[]>(`${firebaseProjectUrl}/recipes.json`)
       .pipe(
         map((jsonRecipes) => {
           //making sure that ingredients property is set

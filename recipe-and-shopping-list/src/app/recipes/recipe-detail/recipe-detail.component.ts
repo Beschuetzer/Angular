@@ -5,12 +5,12 @@ import { AppState } from 'src/app/store/app.reducer';
 import { Recipe } from '../../models/recipe.model';
 import { RecipesService } from '../recipes.service';
 import { Store } from '@ngrx/store';
-import { map } from 'rxjs/operators';
+import { exhaustMap, map } from 'rxjs/operators';
 
 @Component({
   selector: 'app-recipe-detail',
   templateUrl: './recipe-detail.component.html',
-  styleUrls: ['./recipe-detail.component.scss']
+  styleUrls: ['./recipe-detail.component.scss'],
 })
 export class RecipeDetailComponent implements OnInit {
   recipe: Recipe;
@@ -19,12 +19,13 @@ export class RecipeDetailComponent implements OnInit {
   constructor(
     private shoppingListService: ShoppingListService,
     private recipesService: RecipesService,
-    private route: ActivatedRoute,  
+    private route: ActivatedRoute,
     private router: Router,
-    private store: Store<AppState>,
+    private store: Store<AppState>
   ) {}
 
   ngOnInit() {
+    //NOTE: using separate observable pipes
     this.id = this.route.snapshot.params.id;
     if (!this.recipesService.getIsValidId(+this.id)) return this.router.navigate(['/recipes']);
     this.route.params.subscribe((params) => {
@@ -37,6 +38,27 @@ export class RecipeDetailComponent implements OnInit {
         this.recipe = recipe;
       })
     });
+
+    //NOTE: combining two separate observable pipes into one
+    // this.route.params
+    //   .pipe(
+    //     map((routeParams) => {
+    //       //map allows you to change what data is passed on to the next part of the pipe (and all sub-sequent methods/parts)
+    //       return +routeParams.id;
+    //     }),
+    //     exhaustMap((id) => {
+    //       this.id = id;
+
+    //       //exhaust map requires you to return a different observable
+    //       return this.store.select('recipes');
+    //     }),
+    //     map((recipeState) => {
+    //       return recipeState.recipes.find((recipe, index) => index === this.id);
+    //     })
+    //   )
+    //   .subscribe((recipe) => {
+    //     this.recipe = recipe;
+    //   });
   }
 
   handleIngredientsToShoppingList(e: Event) {
@@ -46,6 +68,6 @@ export class RecipeDetailComponent implements OnInit {
   handleDeleteClick() {
     const deletedRecipe = this.recipesService.deleteRecipe(this.id);
     this.recipesService.getUpdatedRecipes();
-    this.router.navigate(['../'], {relativeTo: this.route})
+    this.router.navigate(['../'], { relativeTo: this.route });
   }
 }
