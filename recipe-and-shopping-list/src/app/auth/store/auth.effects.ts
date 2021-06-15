@@ -38,6 +38,7 @@ const handleAuthentication = (
     userId,
     token,
     expirationDate,
+    redirect: true,
   });
 };
 
@@ -111,8 +112,8 @@ export class AuthEffects {
           expirationDate: new Date(
             userDataFromLocalStorage._tokenExpirationDate
           ),
+          redirect: true,
         })
-        
       }
       return { type: "DUMMY"}
     })
@@ -182,10 +183,10 @@ export class AuthEffects {
   //add {dispatch: false} if no action is returned
   @Effect({ dispatch: false })
   authRedirect = this.actions$.pipe(
-    ofType(AuthActions.AUTHENTICATE_SUCCESS, AuthActions.LOGOUT),
-    tap(() => {
+    ofType(AuthActions.AUTHENTICATE_SUCCESS),
+    tap((authSuccessActions: AuthActions.AuthenticateSuccess) => {
       console.log('re-routing------------------------------------------------');
-      this.router.navigate(['/']);
+      if (authSuccessActions.payload.redirect === true) this.router.navigate(['/']);
       this.dataStorageService.fetchRecipes().subscribe(data => {});
     })
   );

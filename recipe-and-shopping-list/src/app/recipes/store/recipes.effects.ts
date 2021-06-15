@@ -26,7 +26,6 @@ export class RecipeEffects {
       });
     }),
     map((jsonRecipes: []) => {
-      debugger;
 
       //storing recipes in
       const instantiatedRecipes =

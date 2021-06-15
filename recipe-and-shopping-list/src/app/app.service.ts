@@ -37,6 +37,7 @@ export class AppService {
           expirationDate: new Date(
             userDataFromLocalStorage._tokenExpirationDate
           ),
+          redirect: false,
         }))
       }
     }
