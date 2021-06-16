@@ -1,9 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Store } from '@ngrx/store';
 import { Actions, Effect, ofType } from '@ngrx/effects';
-import { plainToClass } from 'class-transformer';
-import { map, switchMap, tap } from 'rxjs/operators';
-import { Ingredient } from 'src/app/models/ingredient.model';
+import { map, switchMap, tap, withLatestFrom } from 'rxjs/operators';
 import { Recipe } from 'src/app/models/recipe.model';
 import { firebaseProjectUrl } from 'src/app/shared/data-storage.service';
 import { AppState } from 'src/app/store/app.reducer';
@@ -26,11 +24,21 @@ export class RecipeEffects {
       });
     }),
     map((jsonRecipes: []) => {
-
       //storing recipes in
       const instantiatedRecipes =
         this.recipesService.transformRecipes(jsonRecipes);
       this.store.dispatch(new RecipeActions.SetRecipes(instantiatedRecipes));
+    })
+  );
+
+  @Effect({dispatch: false})
+  storeRecipes = this.actions$.pipe(
+    ofType(RecipeActions.STORE_RECIPES),
+    withLatestFrom(this.store.select('recipes')),
+    switchMap(([actionData, recipesState]) => {
+      debugger;
+      return this.http
+        .put(`${firebaseProjectUrl}/recipes.json`, recipesState.recipes)        
     })
   );
 

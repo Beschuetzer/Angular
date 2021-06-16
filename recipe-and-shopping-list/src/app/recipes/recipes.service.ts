@@ -38,11 +38,6 @@ export class RecipesService {
     private store: Store<fromAppStore.AppState>
   ) {}
 
-  addRecipe(recipe: Recipe) {
-    this.recipes.push(recipe);
-    this.sendNewRecipes();
-  }
-
   getIsValidId(id: number) {
     return id >= 0 && id < this.getRecipesLength();
   }
@@ -72,21 +67,10 @@ export class RecipesService {
         this.recipes = recipeState.recipes;
       })
     }
-    return this.recipes.length;
+    return this.recipes ? this.recipes.length : 0;
   }
 
   getUpdatedRecipes() {
-    this.sendNewRecipes();
-  }
-
-  deleteRecipe(index: number) {
-    this.recipes.splice(index, 1);
-    this.sendNewRecipesSubject.next(this.recipes.slice());
-    this.sendDeletedIndexSubject.next(index);
-  }
-
-  updateRecipe(index: number, newRecipe: Recipe) {
-    this.recipes[index] = newRecipe;
     this.sendNewRecipes();
   }
 

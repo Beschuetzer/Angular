@@ -3,9 +3,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { ShoppingListService } from 'src/app/shopping-list/shopping-list.service';
 import { AppState } from 'src/app/store/app.reducer';
 import { Recipe } from '../../models/recipe.model';
-import { RecipesService } from '../recipes.service';
 import { Store } from '@ngrx/store';
-import { exhaustMap, map } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
+import * as RecipeActions from '../store/recipes.actions';
+import * as ShoppingListActions from '../../shopping-list/store/shopping-list.actions';
+import { RecipesService } from '../recipes.service';
 
 @Component({
   selector: 'app-recipe-detail',
@@ -62,11 +64,11 @@ export class RecipeDetailComponent implements OnInit {
   }
 
   handleIngredientsToShoppingList(e: Event) {
-    this.shoppingListService.addIngredients(this.recipe.ingredients);
+    this.store.dispatch(new ShoppingListActions.AddIngredients(this.recipe.ingredients))
   }
 
   handleDeleteClick() {
-    const deletedRecipe = this.recipesService.deleteRecipe(this.id);
+    this.store.dispatch(new RecipeActions.DeleteRecipe(+this.id));
     this.recipesService.getUpdatedRecipes();
     this.router.navigate(['../'], { relativeTo: this.route });
   }

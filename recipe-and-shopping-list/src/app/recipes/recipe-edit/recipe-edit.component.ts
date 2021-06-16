@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewEncapsulation } from '@angular/core';
+import { Component, OnDestroy, OnInit, ViewEncapsulation } from '@angular/core';
 import {
   Form,
   FormArray,
@@ -14,13 +14,15 @@ import { AppState } from 'src/app/store/app.reducer';
 import { RecipesService } from '../recipes.service';
 import { Store } from '@ngrx/store';
 import { map } from 'rxjs/operators';
+import * as RecipeActions from '../store/recipes.actions';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-recipe-edit',
   templateUrl: './recipe-edit.component.html',
   styleUrls: ['./recipe-edit.component.scss'],
 })
-export class RecipeEditComponent implements OnInit {
+export class RecipeEditComponent implements OnInit, OnDestroy {
   public id: number;
   public editMode = false;
   public form: FormGroup;
@@ -30,6 +32,7 @@ export class RecipeEditComponent implements OnInit {
   private autoSaveTimeoutId;
   private timeOfLastSave: number;
   private initialRecipeState: Recipe;
+  private storeSub: Subscription;
 
   get ingredientControls() {
     const ingredientsFormArray = this.form.get('ingredients') as FormArray;
@@ -76,7 +79,7 @@ export class RecipeEditComponent implements OnInit {
         'edit',
       ]);
     }
-    this.dataStorageService.storeAllRecipes();
+    this.store.dispatch(new RecipeActions.StoreRecipes());
   }
 
   getNewRecipe() {
@@ -97,12 +100,12 @@ export class RecipeEditComponent implements OnInit {
 
   saveNewForm() {
     const newRecipe = this.getNewRecipe();
-    this.recipesService.addRecipe(newRecipe);
+    this.store.dispatch(new RecipeActions.AddRecipe(newRecipe));
   }
 
   updateSavedForm() {
     const newRecipe = this.getNewRecipe();
-    this.recipesService.updateRecipe(this.id, newRecipe);
+    this.store.dispatch(new RecipeActions.UpdateRecipe({index: +this.id, newRecipe: newRecipe}));
   }
 
   ngOnInit() {
@@ -116,6 +119,10 @@ export class RecipeEditComponent implements OnInit {
       this.initializeForm();
     });
     this.initialRecipeState = this.recipesService.getRecipe(this.id);
+  }
+
+  ngOnDestroy() {
+    if(this.storeSub) this.storeSub.unsubscribe();
   }
 
   onAddIngredient() {
@@ -137,7 +144,7 @@ export class RecipeEditComponent implements OnInit {
   }
 
   onUndoFormChanges() {
-    this.recipesService.updateRecipe(this.id, this.initialRecipeState);
+    this.store.dispatch(new RecipeActions.UpdateRecipe({index: +this.id, newRecipe: this.initialRecipeState}))
     this.initializeForm();
   }
 
@@ -148,8 +155,7 @@ export class RecipeEditComponent implements OnInit {
     let recipeIngredients = new FormArray([]);
 
     if (this.editMode) {
-      // const currentRecipe = this.recipesService.getRecipe(this.id);
-      this.store
+      this.storeSub = this.store
         .select('recipes')
         .pipe(
           map((recipeState) => {
